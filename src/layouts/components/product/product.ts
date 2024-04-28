@@ -4,7 +4,7 @@ import { Product } from "./interface";
 
 class ProductService extends ApiService {
     async getAllProduct(): Promise<IBodyResponse<IGetListResponse<Product>>> {
-        return this.client.get(`${this.baseUrl}`);
+        return this.client.get(`${this.baseUrl}/GetAllSanpham`);
     }
 
     async addProduct(product: Product): Promise<IBodyResponse<Product>> {
@@ -16,7 +16,7 @@ class ProductService extends ApiService {
     }
 
     async editProduct(id: string, product: Product): Promise<IBodyResponse<Product>> {
-        return this.client.patch(`${this.baseUrl}/${id}`, product, {
+        return this.client.put(`${this.baseUrl}/${id}`, product, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }

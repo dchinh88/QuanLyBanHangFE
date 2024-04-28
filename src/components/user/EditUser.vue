@@ -30,7 +30,7 @@
           label="Nhập tên user"
           single-line
           class="bg-white"
-          v-model="user.name"
+          v-model="user.tennhanvien"
           hide-details
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
           flat
@@ -107,12 +107,29 @@
           label="Nhập số điện thoại"
           single-line
           class="bg-white"
-          v-model="user.phone"
+          v-model="user.sodienthoai"
           hide-details
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
           flat
         ></v-text-field>
 
+        <div
+          style="color: #464f60"
+          class="font-weight-bold font-weight-medium mt-4 text-medium-emphasis d-flex align-center text-name mb-2"
+        >
+          Địa chỉ
+          <p class="ml-1" style="color: #0f60ff">*</p>
+        </div>
+        <v-text-field
+          density="compact"
+          variant="solo"
+          single-line
+          class="bg-white"
+          v-model="user.diachi"
+          hide-details
+          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+          flat
+        ></v-text-field>
         <div
           style="color: #464f60"
           class="font-weight-bold font-weight-medium mt-4 text-medium-emphasis d-flex align-center text-name mb-2"
@@ -125,14 +142,14 @@
           variant="solo"
           single-line
           class="bg-white"
-          v-model="user.roles"
+          v-model="user.chucvu"
           hide-details
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
           flat
         ></v-text-field>
         <!-- {{ user.roles }} -->
 
-        <div
+        <!-- <div
           style="color: #464f60"
           class="font-weight-bold font-weight-medium mt-4 text-medium-emphasis d-flex align-center text-name mb-2"
         >
@@ -150,7 +167,7 @@
           hide-details
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
           flat
-        ></v-text-field>
+        ></v-text-field> -->
       </div>
       <v-row
         class=""
@@ -207,13 +224,13 @@ const formattedBirthday = ref<string>('');
 const emits = defineEmits(['close', 'updateData']);
 
 const user = ref<User>({
-  name: '',
-  password: '',
+  tennhanvien: '',
+  matkhau: '',
   email: '',
-  birthday: new Date(),
-  phone: 0,
-  avatar: null,
-  roles: '',
+  ngaysinh: new Date(),
+  sodienthoai: '',
+  diachi: '',
+  chucvu: '',
 });
 
 const imageField = ref(null);
@@ -225,13 +242,15 @@ const handleImageChange = (e) => {
 const updateUser = async () => {
   try {
     const formData = new FormData();
-    formData.append('name', user.value.name);
-    formData.append('password', user.value.password);
+    formData.append('id', user.value.id);
+    formData.append('tennhanvien', user.value.tennhanvien);
+    formData.append('diachi', user.value.diachi);
+    formData.append('ngaysinh', user.value.ngaysinh);
+    formData.append('sodienthoai', user.value.sodienthoai);
     formData.append('email', user.value.email);
-    formData.append('birthday', user.value.birthday);
-    formData.append('phone', user.value.phone);
-    formData.append('avatar', imageField.value);
-    formData.append('roles', user.value.roles);
+    formData.append('matkhau', user.value.matkhau);
+    // formData.append('avatar', imageField.value);
+    formData.append('chucvu', user.value.chucvu);
 
     const newItem = await serviceUser.editUser(props.idUser, formData);
     console.log(formData);
@@ -246,18 +265,20 @@ const updateUser = async () => {
   }
 };
 
-const birthdayString = moment(props.currentUser.birthday).format('YYYY-MM-DD');
+const birthdayString = moment(props.currentUser.ngaysinh).format('YYYY-MM-DD');
 
 formattedBirthday.value = birthdayString;
 
 watchEffect(() => {
-  user.value.name = props.currentUser.name;
-  user.value.password = props.currentUser.password;
+  user.value.id = props.currentUser.id;
+  user.value.tennhanvien = props.currentUser.tennhanvien;
+  user.value.matkhau = props.currentUser.matkhau;
   user.value.email = props.currentUser.email;
-  user.value.birthday = formattedBirthday.value;
-  user.value.phone = props.currentUser.phone;
-  user.value.avatar = props.currentUser.avatar;
-  user.value.roles = props.currentUser.roles;
+  user.value.ngaysinh = formattedBirthday.value;
+  // user.value.ngaysinh = props.currentUser.ngaysinh;
+  user.value.sodienthoai = props.currentUser.sodienthoai;
+  user.value.diachi = props.currentUser.diachi;
+  user.value.chucvu = props.currentUser.chucvu;
 });
 </script>
 

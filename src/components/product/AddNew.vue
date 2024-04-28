@@ -3,7 +3,7 @@
     <v-dialog
       class="mx-auto pb-6 mt-1"
       style="border-radius: 12px"
-      max-width="448px"
+      max-width="748px"
       v-model="props.dialogAdd"
     >
       <div
@@ -22,73 +22,207 @@
         </p> -->
         Tạo mới sản phẩm
       </div>
-      <div style="background-color: #f7f7f7; padding: 16px 20px">
-        <div
-          style="color: #464f60"
-          class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
-        >
-          Tên sản phẩm
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập tên sản phẩm"
-          single-line
-          type="text"
-          class="bg-white"
-          v-model="nameField.value.value"
-          hide-details
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-          flat
-        ></v-text-field>
-        <!-- {{ nameField.value }} -->
-        <span class="error-message">{{ nameField.errorMessage }}</span>
+      <div style="background-color: #f7f7f7; padding: 16px 20px 20px">
+        <v-row>
+          <!-- style="padding: 12px" -->
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Tên sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập tên sản phẩm"
+              single-line
+              type="text"
+              class="bg-white"
+              v-model="tensanphamField.value.value"
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              flat
+            ></v-text-field>
+            <!-- {{ nameField.value }} -->
+            <p class="error-message mt-1" style="position: absolute; right: 51%">
+              {{ tensanphamField.errorMessage }}
+            </p></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Giá bán
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
 
-        <div
-          class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2 mt-4"
-        >
-          Giá
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập giá sản phẩm"
+              type="number"
+              single-line
+              v-model="giabanField.value.value"
+              class="bg-white"
+              hide-details
+              flat
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              giabanField.errorMessage
+            }}</span></v-col
+          >
+        </v-row>
 
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập giá sản phẩm"
-          type="number"
-          single-line
-          v-model="priceField.value.value"
-          class="bg-white"
-          hide-details
-          flat
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
-        <span class="error-message">{{ priceField.errorMessage }}</span>
         <!-- <span class="text-left" style="color: red; font-size: 12px; float: right">{{
           errors.price
         }}</span> -->
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Chất liệu
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
 
-        <div
-          class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2 mt-4"
-        >
-          Số lượng
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="chatlieuField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              chatlieuField.errorMessage
+            }}</span></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Màu sắc
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
 
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập số lượng sản phẩm"
-          type="number"
-          single-line
-          class="bg-white"
-          v-model="quantityField.value.value"
-          flat
-          hide-details
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
-        <span class="error-message">{{ quantityField.errorMessage }}</span>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số màu sắc sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="mausacField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              mausacField.errorMessage
+            }}</span></v-col
+          >
+        </v-row>
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Bảo hành
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="baohanhField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              baohanhField.errorMessage
+            }}</span></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Kho
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-select
+              density="compact"
+              variant="solo"
+              label="Chọn kho"
+              single-line
+              class="bg-white"
+              v-model="khoField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-select>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              khoField.errorMessage
+            }}</span></v-col
+          >
+        </v-row>
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Số lượng tồn
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng tồn"
+              single-line
+              class="bg-white"
+              v-model="soluongtonField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              soluongtonField.errorMessage
+            }}</span></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Loại sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Chọn loại sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="loaisanphamField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              loaisanphamField.errorMessage
+            }}</span></v-col
+          >
+        </v-row>
 
         <div
           class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2 mt-4"
@@ -100,7 +234,7 @@
           variant="solo"
           placeholder="Nhập mô tả"
           single-line
-          v-model="descriptionField.value.value"
+          v-model="motaField.value.value"
           class="text-area"
           style="
             margin-bottom: 16px;
@@ -110,9 +244,11 @@
           flat
           hide-details
         ></v-textarea>
-        <span class="error-message">{{ descriptionField.errorMessage }}</span>
+        <span class="error-message" style="position: absolute; right: 3%; top: 89.5%">{{
+          motaField.errorMessage
+        }}</span>
 
-        <div
+        <!-- <div
           class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
         >
           Ảnh sản phẩm
@@ -131,20 +267,20 @@
           hide-details
           flat
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
+        ></v-text-field> -->
         <!-- <span class="error-message">{{ imageField.errorMessage }}</span> -->
       </div>
       <v-row
         style="
-          padding-top: 8px;
+          padding-top: 6px;
           background-color: white;
-          width: 448px;
+          width: 748px;
           margin-left: 0.5px;
           border-radius: 0 0 12px 12px;
         "
       >
-        <v-col cols="6"></v-col>
-        <v-col cols="6"
+        <v-col cols="8"></v-col>
+        <v-col cols="4"
           ><v-btn
             width="70"
             flat
@@ -173,10 +309,11 @@
 <script setup lang="ts">
 import { serviceProduct } from '../../layouts/components/product/product';
 import { Product } from '../../layouts/components/product/interface';
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { showErrorNotification, showSuccessNotification } from '@/common/helpers';
+import { serviceKho } from '../../layouts/components/kho/kho';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -192,25 +329,32 @@ const product = ref<Product>({
   image: null,
 });
 
+const kho = ref([]);
+
 const schema = yup.object({
-  name: yup.string().required('Tên sản phẩm là bắt buộc'),
+  tensanpham: yup.string().required('Tên sản phẩm là bắt buộc'),
   // .matches(
   //   FORM_VALIDATION.codeRegExp,
   //   'Không được chứa khoảng trắng và kí tự đặc biệt',
   // ),
-  price: yup
+  giaban: yup
     .string()
     .required('Giá sản phẩm là bắt buộc')
     .min(1, 'Giá sản phẩm không nhỏ hơn 1'),
-  quantity: yup
+  soluongton: yup
     .string()
     .required('Số lượng sản phẩm là bắt buộc')
     .min(1, 'Số lượng không được nhỏ hơn 0'),
-  description: yup
+  mota: yup
     .string()
     .required('Mô tả là bắt buộc')
     .min(10, 'Mô tả tối thiểu là 10 kí tự!')
     .max(500, 'Mô tả tối đa 500 kí tự!'),
+  chatlieu: yup.string().required('Chất liệu là bắt buộc'),
+  mausac: yup.string().required('Màu sắc là bắt buộc'),
+  baohanh: yup.string().required('Bảo hành là bắt buộc'),
+  kho: yup.string().required('Kho là bắt buộc'),
+  loaisanpham: yup.string().required('Loại sản phẩm là bắt buộc'),
 });
 
 const { handleSubmit } = useForm({
@@ -220,10 +364,15 @@ const { handleSubmit } = useForm({
 // const nameField = useField('name', {
 //   initialValues: product.value.name,
 // });
-const nameField = useField('name');
-const priceField = useField('price');
-const quantityField = useField('quantity');
-const descriptionField = useField('description');
+const loaisanphamField = useField('loaisanpham');
+const tensanphamField = useField('tensanpham');
+const giabanField = useField('giaban');
+const chatlieuField = useField('chatlieu');
+const mausacField = useField('mausac');
+const baohanhField = useField('baohanh');
+const motaField = useField('mota');
+const khoField = useField('kho');
+const soluongtonField = useField('soluongton');
 
 const imageFile = ref(null);
 
@@ -232,14 +381,26 @@ const handleImageChange = (event) => {
   imageFile.value = image;
 };
 
+const getKho = async () => {
+  const res = await serviceKho.getAllKho();
+  kho.value = res;
+  console.log(res);
+
+  console.log(typeof kho);
+};
+
+onMounted(async () => {
+  getKho();
+});
+
 const addProduct = handleSubmit(async () => {
   try {
     const formData = new FormData();
-    formData.append('name', nameField.value.value);
-    formData.append('price', priceField.value.value);
-    formData.append('quantity', quantityField.value.value);
-    formData.append('description', descriptionField.value.value);
-    formData.append('image', imageFile.value);
+    formData.append('tensanpham', tensanphamField.value.value);
+    formData.append('giaban', giabanField.value.value);
+    formData.append('chatlieu', chatlieuField.value.value);
+    formData.append('mausac', mausacField.value.value);
+    // formData.append('image', imageFile.value);
 
     const response = await serviceProduct.addProduct(formData);
 

@@ -7,10 +7,12 @@ export const useUser = () => {
     const fetchUser = async () => {
         try {
             const res = await serviceUser._getList<User>(query)
+            console.log(res);
+
             if (res.success) {
                 return {
-                    data: res.data.items,
-                    totalItems: res.data.totalItems
+                    data: res.items,
+                    totalItems: res.totalItems
                 }
             }
             return null;

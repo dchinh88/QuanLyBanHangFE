@@ -45,6 +45,27 @@
         <span class="error-message">{{ nameField.errorMessage }}</span>
 
         <div
+          style="color: #464f60"
+          class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2 mt-4"
+        >
+          Địa chỉ
+          <p class="ml-1" style="color: #0f60ff">*</p>
+        </div>
+        <v-text-field
+          density="compact"
+          variant="solo"
+          label="Nhập tên người dùng"
+          single-line
+          type="text"
+          class="bg-white"
+          v-model="addressField.value.value"
+          hide-details
+          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+          flat
+        ></v-text-field>
+        <span class="error-message">{{ addressField.errorMessage }}</span>
+
+        <div
           class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2 mt-4"
         >
           Email
@@ -146,7 +167,7 @@
         ></v-text-field>
         <!-- <span class="error-message">{{ phoneField.errorMessage }}</span> -->
 
-        <div
+        <!-- <div
           class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
         >
           Avartar
@@ -165,7 +186,7 @@
           hide-details
           flat
           style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
+        ></v-text-field> -->
 
         <!-- <v-card class="mb-12" color="surface-variant" variant="tonal"> </v-card> -->
       </div>
@@ -228,6 +249,7 @@ const schema = yup.object({
   //   'Không được chứa khoảng trắng và kí tự đặc biệt',
   // ),
   email: yup.string().email('Email không đúng định dạng').required('Email là bắt buộc'),
+  address: yup.string().required('Địa chỉ là bắt buộc'),
   birthday: yup
     .date()
     .required('Ngày sinh không được để trống')
@@ -259,6 +281,7 @@ const emailField = useField('email', '');
 const birthdayField = useField('birthday');
 const phoneField = useField('phone', '');
 const passwordField = useField('password', '');
+const addressField = useField('address', '');
 
 const roleField = useField('role');
 
@@ -279,13 +302,13 @@ const handleImageChange = (e) => {
 const addUser = handleSubmit(async () => {
   try {
     const formData = new FormData();
-    formData.append('name', nameField.value.value);
-    formData.append('password', passwordField.value.value);
+    formData.append('tennhanvien', nameField.value.value);
+    formData.append('diachi', addressField.value.value);
+    formData.append('ngaysinh', birthdayField.value.value);
+    formData.append('sodienthoai', phoneField.value.value);
     formData.append('email', emailField.value.value);
-    formData.append('birthday', birthdayField.value.value);
-    formData.append('phone', phoneField.value.value);
-    formData.append('avatar', imageField.value);
-    formData.append('roles', roleField.value.value);
+    formData.append('matkhau', passwordField.value.value);
+    formData.append('chucvu', roleField.value.value);
 
     const response = await serviceUser.addUser(formData);
     if (response.success) {
@@ -299,6 +322,7 @@ const addUser = handleSubmit(async () => {
       phoneField.value.value = '';
       imageField.value = null;
       roleField.value.value = '';
+      addressField.value.value = '';
 
       emits('close');
       emits('updateData');

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
+import { DATE_TIME_FORMAT, DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useUser } from '../layouts/components/user/user.store';
 import { serviceUser } from '../layouts/components/user/user';
 import EditUser from '../components/user/EditUser.vue';
@@ -65,7 +65,7 @@ const formatTime = (time) => {
 
 const searchUser = computed(() => {
   const keyword = search.value.toLowerCase();
-  return user.value.filter((p) => p.name.toLowerCase().includes(keyword));
+  return user.value.filter((p) => p.tennhanvien.toLowerCase().includes(keyword));
 });
 
 const deleteUser = async () => {
@@ -122,32 +122,34 @@ const deleteUser = async () => {
         <v-table style="border-radius: 12px 12px 0 0">
           <thead>
             <tr>
-              <th
+              <!-- <th
                 class="text-table text-uppercase"
                 style="padding: 16px 0 16px 36px; height: 47px"
               >
                 Avartar
-              </th>
+              </th> -->
               <th style="height: 47px" class="text-table text-uppercase">
-                Tên người dùng
+                Tên nhân viên
               </th>
-              <th style="height: 47px" class="text-table text-uppercase">Email</th>
+              <th style="height: 47px" class="text-table text-uppercase">Địa chỉ</th>
               <th style="height: 47px" class="text-table text-uppercase">Ngày sinh</th>
               <th style="height: 47px" class="text-table text-uppercase">
                 Số điện thoại
               </th>
+              <th style="height: 47px" class="text-table text-uppercase">Email</th>
+              <th style="height: 47px" class="text-table text-uppercase">Chức vụ</th>
               <th style="height: 47px" class="text-table text-uppercase">Hành động</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, i) in searchUser" :key="i">
-              <td class="">
+              <!-- <td class="">
                 <v-img
                   class="ml-4"
                   style="width: 35px; height: 35px; border-radius: 2px"
                   :src="item.avatar"
                 ></v-img>
-              </td>
+              </td> -->
               <td
                 class="text-name-user"
                 style="
@@ -158,13 +160,13 @@ const deleteUser = async () => {
                   text-overflow: ellipsis;
                 "
               >
-                {{ item.name }}
+                {{ item.tennhanvien }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ item.email }}
+                {{ item.diachi }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatTime(item.birthday) }}
+                {{ formatTime(item.ngaysinh) }}
               </td>
               <td
                 class="text-price-user"
@@ -176,7 +178,13 @@ const deleteUser = async () => {
                   text-overflow: ellipsis;
                 "
               >
-                {{ item.phone }}
+                {{ item.sodienthoai }}
+              </td>
+              <td style="padding: 18px 0 18px 18px" class="text-price-user">
+                {{ item.email }}
+              </td>
+              <td style="padding: 18px 0 18px 18px" class="text-price-user">
+                {{ item.chucvu }}
               </td>
               <td class="text-left">
                 <v-btn

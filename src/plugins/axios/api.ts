@@ -52,7 +52,7 @@ export class ApiService {
     }
 
     _update<P, R>(id: number | string, params: P): Promise<R> {
-        return this.client.patch(this.updateUrl + '/' + id, params);
+        return this.client.put(this.updateUrl + '/' + id, params);
     }
 
     _delete<R>(id: number | string): Promise<R> {

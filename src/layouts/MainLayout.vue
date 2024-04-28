@@ -1,22 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
-import SideBar from './components/sidebar/SideBar.vue';
 import AddNew from '../components/product/AddNew.vue';
 import EditProduct from '../components/product/EditProduct.vue';
 import { serviceProduct } from '../layouts/components/product/product';
-// import { Product } from '../layouts/components/product/interface';
 import numeral from 'numeral';
 import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useProduct } from '../layouts/components/product/product.store';
 import { showSuccessNotification } from '@/common/helpers';
 import { serviceKho } from '../layouts/components/kho/kho';
-import { number } from 'yup';
-import { value } from '@formulajs/formulajs/types/utils/error';
-import { formToJSON } from 'axios';
 
 const { fetchProducts, query } = useProduct();
-
-// import { ProductStore } from '../layouts/components/product/product.store';
 
 const page = ref(1);
 const dialogAdd = ref(false);
@@ -36,6 +29,15 @@ const search = ref('');
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
 
+// onMounted(async () => {
+//   try {
+//     getAllProduct();
+//     GetAllKho();
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
 onMounted(async () => {
   try {
     getAllProduct();
@@ -48,11 +50,9 @@ onMounted(async () => {
 const GetAllKho = async () => {
   const res = await serviceKho.getAllKho();
   khos.value = res;
-
-  console.log(typeof khos.value);
-  console.log(khos.value);
+  // console.log(typeof khos.value);
+  // console.log(khos.value);
 };
-
 const getAllProduct = async () => {
   const res = await fetchProducts();
   products.value = res.data;
@@ -71,13 +71,13 @@ watch(selectedValue, (newVal) => {
   query.page = 1;
   page.value = 1;
   getAllProduct();
-  // getAllProduct();
+  // GetAllKho();
 });
 
 watch(page, (newVal) => {
   query.page = newVal;
   getAllProduct();
-  // getAllProduct();
+  // GetAllKho();
 });
 
 const searchProduct = computed(() => {
@@ -263,8 +263,11 @@ const formatMoney = (money) => {
               <td class="text-left text-price-product">{{ item.mota }}</td>
               <td class="text-left text-price-product">{{ item.baohanh }}</td>
               <td class="text-left text-price-product">{{ item.soluongton }}</td>
-              <td class="text-left text-price-product">
+              <!-- <td class="text-left text-price-product">
                 {{ getTenkho(item.khoid) }}
+              </td> -->
+              <td class="text-left text-price-product">
+                {{ item.khoid }}
               </td>
               <!-- <td class="text-left text-price-product">{{ khos.value.target.id }}</td> -->
 
