@@ -29,15 +29,6 @@ const search = ref('');
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
 
-// onMounted(async () => {
-//   try {
-//     getAllProduct();
-//     GetAllKho();
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
-
 onMounted(async () => {
   try {
     getAllProduct();
@@ -210,12 +201,12 @@ const formatMoney = (money) => {
               >
                 Số lượng tồn
               </th>
-              <th
+              <!-- <th
                 style="height: 47px; max-width: 165px !important"
                 class="text-table text-uppercase"
               >
                 Kho
-              </th>
+              </th> -->
               <th
                 style="height: 47px; max-width: 165px !important"
                 class="text-table text-uppercase"
@@ -266,10 +257,9 @@ const formatMoney = (money) => {
               <!-- <td class="text-left text-price-product">
                 {{ getTenkho(item.khoid) }}
               </td> -->
-              <td class="text-left text-price-product">
+              <!-- <td class="text-left text-price-product">
                 {{ item.khoid }}
-              </td>
-              <!-- <td class="text-left text-price-product">{{ khos.value.target.id }}</td> -->
+              </td> -->
 
               <!-- <td class="text-left">
                 <v-img

@@ -210,17 +210,20 @@
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
 
-            <v-text-field
+            <v-select
               density="compact"
               variant="solo"
               label="Chọn loại sản phẩm"
               single-line
+              :items="loaisanpham"
+              item-value="id"
+              item-title="tenloaisanpham"
               class="bg-white"
               v-model="loaisanphamField.value.value"
               flat
               hide-details
               style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-            ></v-text-field>
+            ></v-select>
             <span class="error-message mt-1" style="position: absolute; right: 3%">{{
               loaisanphamField.errorMessage
             }}</span></v-col
@@ -317,6 +320,7 @@ import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { showErrorNotification, showSuccessNotification } from '@/common/helpers';
 import { serviceKho } from '../../layouts/components/kho/kho';
+import { serviceLoaisanpham } from '../../layouts/components/loaisanpham/loaisanpham';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -334,6 +338,9 @@ const product = ref<Product>({
 
 const kho = ref([]);
 const khos = ref([]);
+
+const lsp = ref([]);
+const loaisanpham = ref([]);
 
 const schema = yup.object({
   tensanpham: yup.string().required('Tên sản phẩm là bắt buộc'),
@@ -388,25 +395,40 @@ const handleImageChange = (event) => {
 const getKho = async () => {
   const res = await serviceKho.getAllKho();
   kho.value = res;
-  console.log(kho.value[0]);
+  var lengthKho = Object.keys(kho.value).length;
 
-  for (var i = 0; i < 10; i++) {
-    khos.value.push(kho.value[i].tenkho);
-    console.log(khos);
+  for (var i = 0; i < lengthKho - 1; i++) {
+    khos.value.push(kho.value[i]);
+  }
+  console.log(Object.keys(kho.value).length);
+};
+
+const getLoaisanpham = async () => {
+  const res = await serviceLoaisanpham.getAllLoaisanpham();
+  lsp.value = res;
+  var lengthLsp = Object.keys(lsp.value).length;
+  for (var i = 0; i < lengthLsp - 1; i++) {
+    loaisanpham.value.push(lsp.value[i]);
   }
 };
 
 onMounted(async () => {
   getKho();
+  getLoaisanpham();
 });
 
 const addProduct = handleSubmit(async () => {
   try {
     const formData = new FormData();
+    formData.append('loaisanphamid', loaisanphamField.value.value);
     formData.append('tensanpham', tensanphamField.value.value);
     formData.append('giaban', giabanField.value.value);
     formData.append('chatlieu', chatlieuField.value.value);
     formData.append('mausac', mausacField.value.value);
+    formData.append('baohanh', baohanhField.value.value);
+    formData.append('mota', motaField.value.value);
+    formData.append('khoid', khoField.value.value);
+    formData.append('soluongton', soluongtonField.value.value);
     // formData.append('image', imageFile.value);
 
     const response = await serviceProduct.addProduct(formData);
@@ -414,11 +436,16 @@ const addProduct = handleSubmit(async () => {
     console.log(response);
 
     if (response.success) {
-      nameField.value.value = '';
-      priceField.value.value = '';
-      quantityField.value.value = '';
-      descriptionField.value.value = '';
-      imageFile.value = null;
+      loaisanphamField.value.value = '';
+      tensanphamField.value.value = '';
+      giabanField.value.value = '';
+      chatlieuField.value.value = '';
+      mausacField.value.value = '';
+      baohanhField.value.value = '';
+      motaField.value.value = '';
+      khoField.value.value = '';
+      soluongtonField.value.value = '';
+      // imageFile.value = null;
       // emptyForm();
 
       emits('close');

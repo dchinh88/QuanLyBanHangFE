@@ -7,20 +7,26 @@ class ProductService extends ApiService {
         return this.client.get(`${this.baseUrl}/GetAllSanpham`);
     }
 
+    // async addProduct(product: Product): Promise<IBodyResponse<Product>> {
+    //     return this.client.post(`${this.baseUrl}`, product, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     });
+    // }
     async addProduct(product: Product): Promise<IBodyResponse<Product>> {
-        return this.client.post(`${this.baseUrl}`, product, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        return this.client.post(`${this.baseUrl}`, product);
     }
 
+    // async editProduct(id: string, product: Product): Promise<IBodyResponse<Product>> {
+    //     return this.client.put(`${this.baseUrl}/${id}`, product, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     });
+    // }
     async editProduct(id: string, product: Product): Promise<IBodyResponse<Product>> {
-        return this.client.put(`${this.baseUrl}/${id}`, product, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
+        return this.client.put(`${this.baseUrl}/${id}`, product);
     }
     async deleteProduct(id: number): Promise<IBodyResponse<Product>> {
         return this.client.delete(`${this.baseUrl}/${id}`);
