@@ -1,6 +1,6 @@
 <template>
-  <v-app id="inspire">
-    <div v-if="ROLE == 'admin'">
+  <v-app id="inspire" style="background-color: #f5f5f9">
+    <div v-if="ROLE == 'admin'" style="background-color: #f5f5f9">
       <v-navigation-drawer
         class="sidebar"
         v-model:rail="rail"

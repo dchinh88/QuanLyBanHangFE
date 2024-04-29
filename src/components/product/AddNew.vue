@@ -164,6 +164,9 @@
               variant="solo"
               label="Chọn kho"
               single-line
+              :items="khos"
+              item-value="id"
+              item-title="tenkho"
               class="bg-white"
               v-model="khoField.value.value"
               flat
@@ -330,6 +333,7 @@ const product = ref<Product>({
 });
 
 const kho = ref([]);
+const khos = ref([]);
 
 const schema = yup.object({
   tensanpham: yup.string().required('Tên sản phẩm là bắt buộc'),
@@ -384,9 +388,12 @@ const handleImageChange = (event) => {
 const getKho = async () => {
   const res = await serviceKho.getAllKho();
   kho.value = res;
-  console.log(res);
+  console.log(kho.value[0]);
 
-  console.log(typeof kho);
+  for (var i = 0; i < 10; i++) {
+    khos.value.push(kho.value[i].tenkho);
+    console.log(khos);
+  }
 };
 
 onMounted(async () => {
