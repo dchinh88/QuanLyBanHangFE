@@ -126,9 +126,14 @@
       <v-app-bar flat style="background-color: #f5f5f9">
         <!-- <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon> -->
 
-        <v-app-bar-title class="title-admin ml-5">{{
+        <!-- <v-app-bar-title class="title-admin ml-5">{{
           showProductList == true ? 'Danh sách sản phẩm' : 'Danh sách người dùng'
-        }}</v-app-bar-title>
+        }}</v-app-bar-title> -->
+        <v-app-bar-title
+          class="title-admin ml-5 align-center justify-center"
+          style="height: 60px"
+          >{{ returnTitle(option) }}</v-app-bar-title
+        >
         <v-badge content="4" class="mr-2" overlap color="red">
           <v-icon icon="mdi mdi-bell-outline"></v-icon>
         </v-badge>
@@ -178,8 +183,11 @@
 
       <v-main style="background-color: #f5f5f9">
         <!--  -->
-        <main-layout v-if="showProductList" />
-        <secondary-layout v-else />
+        <loaisanpham-layout v-if="option == 1" />
+        <main-layout v-if="option == 2" />
+        <secondary-layout v-if="option == 3" />
+        <!-- <main-layout v-if="showProductList" />
+        <secondary-layout v-else /> -->
       </v-main>
     </div>
     <div v-else>
@@ -196,6 +204,7 @@ import { useSidebarStore } from '@/common/stores';
 import SecondaryLayout from '@/layouts/SecondaryLayout.vue';
 // import MainLayout from '@/layouts/SecondaryLayout.vue';
 import MainLayout from '@/layouts/MainLayout.vue';
+import LoaisanphamLayout from '@/layouts/LoaisanphamLayout.vue';
 import router from '@/plugins/vue-router';
 import Page403 from './Page403.vue';
 
@@ -212,6 +221,32 @@ const items = ref([{ title: 'Xem profile' }, { title: 'Đăng xuất' }]);
 
 const ROLE = localStorage.getItem('ROLE');
 const AvatarUser = localStorage.getItem('AVATAR');
+
+const returnTitle = (op) => {
+  if (op === 1) {
+    return 'Quản lý loại sản phẩm';
+  } else if (op === 2) {
+    return 'Quản lý sản phẩm';
+  } else if (op === 3) {
+    return 'Quản lý nhân viên';
+  } else if (op === 4) {
+    return 'Quản lý khách hàng';
+  } else if (op === 5) {
+    return 'Quản lý kho';
+  } else if (op === 6) {
+    return 'Quản lý nhà cung cấp';
+  } else if (op === 7) {
+    return 'Quản lý đơn hàng';
+  } else if (op === 8) {
+    return 'Quản lý phiếu mua hàng';
+  } else if (op === 9) {
+    return 'Quản lý công nợ với nhà cung cấp';
+  } else if (op === 10) {
+    return 'Quản lý công nợ của khách hàng';
+  } else if (op === 0) {
+    return 'Tổng quan';
+  }
+};
 
 const showHome = () => {
   rail.value = true;
@@ -258,7 +293,7 @@ const showProduct = () => {
   showUserList.value = false;
   rail.value = true;
   option.value = 2;
-  console.log(showProductList.value, showUserList.value);
+  // console.log(showProductList.value, showUserList.value);
 };
 
 const showUser = () => {
@@ -266,7 +301,7 @@ const showUser = () => {
   showProductList.value = false;
   showUserList.value = true;
   option.value = 3;
-  console.log(showProductList.value, showUserList.value);
+  // console.log(showProductList.value, showUserList.value);
 };
 
 const sidebarStore = useSidebarStore();
