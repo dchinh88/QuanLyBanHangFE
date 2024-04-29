@@ -25,7 +25,7 @@ class ProductService extends ApiService {
     //         }
     //     });
     // }
-    async editProduct(id: string, product: Product): Promise<IBodyResponse<Product>> {
+    async editProduct(id: number, product: Product): Promise<IBodyResponse<Product>> {
         return this.client.put(`${this.baseUrl}/${id}`, product);
     }
     async deleteProduct(id: number): Promise<IBodyResponse<Product>> {

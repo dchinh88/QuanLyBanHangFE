@@ -91,7 +91,7 @@
             <v-text-field
               density="compact"
               variant="solo"
-              label="Nhập số lượng sản phẩm"
+              label="Nhập chất liệu sản phẩm"
               single-line
               class="bg-white"
               v-model="chatlieuField.value.value"
@@ -191,6 +191,7 @@
               density="compact"
               variant="solo"
               label="Nhập số lượng tồn"
+              type="number"
               single-line
               class="bg-white"
               v-model="soluongtonField.value.value"
@@ -362,7 +363,7 @@ const schema = yup.object({
     .min(10, 'Mô tả tối thiểu là 10 kí tự!')
     .max(500, 'Mô tả tối đa 500 kí tự!'),
   chatlieu: yup.string().required('Chất liệu là bắt buộc'),
-  mausac: yup.string().required('Màu sắc là bắt buộc'),
+  macsac: yup.string().required('Màu sắc là bắt buộc'),
   baohanh: yup.string().required('Bảo hành là bắt buộc'),
   kho: yup.string().required('Kho là bắt buộc'),
   loaisanpham: yup.string().required('Loại sản phẩm là bắt buộc'),
@@ -379,7 +380,7 @@ const loaisanphamField = useField('loaisanpham');
 const tensanphamField = useField('tensanpham');
 const giabanField = useField('giaban');
 const chatlieuField = useField('chatlieu');
-const mausacField = useField('mausac');
+const mausacField = useField('macsac');
 const baohanhField = useField('baohanh');
 const motaField = useField('mota');
 const khoField = useField('kho');
@@ -424,7 +425,7 @@ const addProduct = handleSubmit(async () => {
     formData.append('tensanpham', tensanphamField.value.value);
     formData.append('giaban', giabanField.value.value);
     formData.append('chatlieu', chatlieuField.value.value);
-    formData.append('mausac', mausacField.value.value);
+    formData.append('macsac', mausacField.value.value);
     formData.append('baohanh', baohanhField.value.value);
     formData.append('mota', motaField.value.value);
     formData.append('khoid', khoField.value.value);

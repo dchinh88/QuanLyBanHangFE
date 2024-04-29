@@ -3,7 +3,7 @@
     <v-dialog
       class="mx-auto pb-6 mt-1"
       style="border-radius: 12px"
-      max-width="448px"
+      max-width="748px"
       v-model="props.dialogEdit"
     >
       <div
@@ -23,47 +23,54 @@
         Sửa sản phẩm
       </div>
       <div style="background-color: #f7f7f7; padding: 16px 20px">
-        <div
-          style="color: #464f60"
-          class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
-        >
-          Tên sản phẩm
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập tên sản phẩm"
-          single-line
-          class="bg-white"
-          v-model="product.name"
-          hide-details
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-          flat
-        ></v-text-field>
+        <v-row>
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Tên sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập tên sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="product.tensanpham"
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              flat
+            ></v-text-field
+          ></v-col>
+          <v-col
+            ><div
+              class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Giá
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập giá sản phẩm"
+              single-line
+              type="number"
+              class="bg-white"
+              v-model="product.giaban"
+              hide-details
+              flat
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field
+          ></v-col>
+        </v-row>
+
         <!-- <span class="text-left" style="color: red; font-size: 12px; float: right">{{
           errors.name
         }}</span> -->
 
-        <div
-          class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2 mt-4"
-        >
-          Giá
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
-
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập giá sản phẩm"
-          single-line
-          type="number"
-          class="bg-white"
-          v-model="product.price"
-          hide-details
-          flat
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
         <!-- :loading="loading" -->
 
         <!-- v-model="product.price"
@@ -74,24 +81,153 @@
         }}</span> -->
         <!-- {{ idProduct }} -->
 
-        <div
-          class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2 mt-4"
-        >
-          Số lượng
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Chất liệu
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
 
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập số lượng sản phẩm"
-          single-line
-          class="bg-white"
-          v-model="product.quantity"
-          flat
-          hide-details
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="product.chatlieu"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field
+          ></v-col>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Màu sắc
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="product.macsac"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field
+          ></v-col>
+        </v-row>
+
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Bảo hành
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="product.baohanh"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field
+          ></v-col>
+          <v-col>
+            <div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Kho
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <!-- <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng sản phẩm"
+              single-line
+              class="bg-white"
+              v-model="product.khoId"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            {{ product.khoId }} -->
+
+            <v-select
+              density="compact"
+              variant="solo"
+              label="Chọn kho"
+              single-line
+              :items="khos"
+              item-value="id"
+              item-title="tenkho"
+              class="bg-white"
+              v-model="product.khoid"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-select>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Số lượng tồn
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số lượng tồn"
+              type="number"
+              single-line
+              class="bg-white"
+              v-model="product.soluongton"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+          </v-col>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Loại sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-select
+              density="compact"
+              variant="solo"
+              label="Chọn loại sản phẩm"
+              single-line
+              :items="loaisanpham"
+              item-value="id"
+              item-title="tenloaisanpham"
+              class="bg-white"
+              v-model="product.loaisanphamid"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-select
+          ></v-col>
+        </v-row>
+
         <!-- <span class="text-left" style="color: red; font-size: 12px; float: right">{{
           errors.quantity
         }}</span> -->
@@ -106,7 +242,7 @@
           variant="solo"
           placeholder="Nhập mô tả"
           single-line
-          v-model="product.description"
+          v-model="product.mota"
           class="text-area"
           style="
             margin-bottom: 16px;
@@ -116,46 +252,18 @@
           flat
           hide-details
         ></v-textarea>
-        <!-- <v-textarea label="Label" variant="solo" flat single-line></v-textarea> -->
-
-        <div
-          class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
-        >
-          Ảnh sản phẩm
-          <p class="ml-1" style="color: #0f60ff">*</p>
-        </div>
-        <!-- {{ idProduct }} -->
-
-        <v-text-field
-          density="compact"
-          variant="solo"
-          label="Nhập link ảnh sản phẩm"
-          single-line
-          class="bg-white mb-3"
-          @change="handleImageChange"
-          type="file"
-          hide-details
-          flat
-          style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-        ></v-text-field>
-
-        <!-- <span class="text-left" style="color: red; font-size: 12px; float: right">{{
-          errors.image
-        }}</span> -->
-
-        <!-- <v-card class="mb-12" color="surface-variant" variant="tonal"> </v-card> -->
       </div>
       <v-row
         style="
           padding-top: 8px;
           background-color: white;
-          width: 448px;
+          width: 748px;
           margin-left: 0.5px;
           border-radius: 0 0 12px 12px;
         "
       >
-        <v-col cols="6"></v-col>
-        <v-col cols="6"
+        <v-col cols="8"></v-col>
+        <v-col cols="4"
           ><v-btn
             width="70"
             @click="emits('close')"
@@ -182,9 +290,14 @@
   
   <script setup lang="ts">
 import { serviceProduct } from '../../layouts/components/product/product';
-import { ref, watchEffect } from 'vue';
+import { onMounted, ref, watchEffect } from 'vue';
 import { Product } from '../../layouts/components/product/interface';
 import { defineProps, defineEmits } from 'vue';
+
+import { serviceKho } from '../../layouts/components/kho/kho';
+import { serviceLoaisanpham } from '../../layouts/components/loaisanpham/loaisanpham';
+import { number } from 'yup';
+import { showErrorNotification, showSuccessNotification } from '../../common/helpers';
 
 const props = defineProps<{
   dialogEdit: boolean;
@@ -192,12 +305,48 @@ const props = defineProps<{
   idProduct: string;
 }>();
 
+const kho = ref([]);
+const khos = ref([]);
+
+const lsp = ref([]);
+const loaisanpham = ref([]);
+
+const getKho = async () => {
+  const res = await serviceKho.getAllKho();
+  kho.value = res;
+  var lengthKho = Object.keys(kho.value).length;
+
+  for (var i = 0; i < lengthKho - 1; i++) {
+    khos.value.push(kho.value[i]);
+  }
+  console.log(Object.keys(kho.value).length);
+};
+
+const getLoaisanpham = async () => {
+  const res = await serviceLoaisanpham.getAllLoaisanpham();
+  lsp.value = res;
+  var lengthLsp = Object.keys(lsp.value).length;
+  for (var i = 0; i < lengthLsp - 1; i++) {
+    loaisanpham.value.push(lsp.value[i]);
+  }
+};
+
+onMounted(async () => {
+  getKho();
+  getLoaisanpham();
+});
+
 const product = ref<Product>({
-  name: '',
-  price: 0,
-  quantity: 0,
-  description: '',
-  image: null,
+  loaisanphamid: Number(),
+  tensanpham: '',
+  giaban: Number(),
+  chatlieu: '',
+  macsac: '',
+  baohanh: '',
+  mota: '',
+  khoid: Number(),
+  soluongton: Number(),
+  // image: null,
 });
 
 // const handleImageChange = (e: Event) => {
@@ -219,11 +368,16 @@ const emits = defineEmits(['close', 'updateData']);
 const updateProduct = async () => {
   try {
     const formData = new FormData();
-    formData.append('name', product.value.name);
-    formData.append('price', product.value.price);
-    formData.append('quantity', product.value.quantity);
-    formData.append('description', product.value.description);
-    formData.append('image', imageField.value);
+    formData.append('id', product.value.id);
+    formData.append('loaisanphamid', product.value.loaisanphamid);
+    formData.append('tensanpham', product.value.tensanpham);
+    formData.append('giaban', product.value.giaban);
+    formData.append('chatlieu', product.value.chatlieu);
+    formData.append('macsac', product.value.macsac);
+    formData.append('baohanh', product.value.baohanh);
+    formData.append('mota', product.value.mota);
+    formData.append('khoid', product.value.khoid);
+    formData.append('soluongton', product.value.soluongton);
 
     const newItem = await serviceProduct.editProduct(props.idProduct, formData);
     console.log(formData);
@@ -231,6 +385,9 @@ const updateProduct = async () => {
     if (newItem.success) {
       emits('updateData');
       emits('close');
+      showSuccessNotification('Sửa sản phẩm thành công');
+    } else {
+      showErrorNotification('Sửa sản phẩm thất bại!');
     }
   } catch (error) {
     console.error('Error: ', error);
@@ -238,11 +395,16 @@ const updateProduct = async () => {
 };
 
 watchEffect(() => {
-  product.value.name = props.currentProduct.name;
-  product.value.price = props.currentProduct.price;
-  product.value.quantity = props.currentProduct.quantity;
-  product.value.description = props.currentProduct.description;
-  product.value.image = props.currentProduct.image;
+  product.value.id = props.currentProduct.id;
+  product.value.loaisanphamid = props.currentProduct.loaisanphamid;
+  product.value.tensanpham = props.currentProduct.tensanpham;
+  product.value.giaban = props.currentProduct.giaban;
+  product.value.chatlieu = props.currentProduct.chatlieu;
+  product.value.macsac = props.currentProduct.macsac;
+  product.value.baohanh = props.currentProduct.baohanh;
+  product.value.mota = props.currentProduct.mota;
+  product.value.khoid = props.currentProduct.khoid;
+  product.value.soluongton = props.currentProduct.soluongton;
 });
 </script>
   

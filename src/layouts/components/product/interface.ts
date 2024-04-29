@@ -6,14 +6,14 @@ export interface Product {
     // quantity?: number;
     // description?: string;
     // image?: File | null;
-    loaisanphamId?: number;
+    loaisanphamid?: number;
     tensanpham?: string;
-    giaban?: Float32Array;
+    giaban?: number;
     chatlieu?: string;
-    mausac?: string;
+    macsac?: string;
     baohanh?: string;
     mota?: string;
-    khoId?: number;
+    khoid?: number;
     soluongton?: number;
 }
 
