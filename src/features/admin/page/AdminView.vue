@@ -186,6 +186,7 @@
         <loaisanpham-layout v-if="option == 1" />
         <main-layout v-if="option == 2" />
         <secondary-layout v-if="option == 3" />
+        <khachhang-layout v-if="option == 4" />
         <!-- <main-layout v-if="showProductList" />
         <secondary-layout v-else /> -->
       </v-main>
@@ -205,6 +206,7 @@ import SecondaryLayout from '@/layouts/SecondaryLayout.vue';
 // import MainLayout from '@/layouts/SecondaryLayout.vue';
 import MainLayout from '@/layouts/MainLayout.vue';
 import LoaisanphamLayout from '@/layouts/LoaisanphamLayout.vue';
+import KhachhangLayout from '@/layouts/KhachhangLayout.vue';
 import router from '@/plugins/vue-router';
 import Page403 from './Page403.vue';
 
