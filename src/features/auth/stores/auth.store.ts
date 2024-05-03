@@ -21,12 +21,14 @@ export const useAuthStore = defineStore('authStore', () => {
     if (res.success) {
       localStorageAuthService.setAccessToken(res.user.accessToken.token);
       localStorageAuthService.setAccessTokenExpiredAt(res.user.accessToken.expires);
+      localStorageAuthService.setIdUser(res.user.accessToken.iduser)
 
       localStorageAuthService.setRefreshToken(res.user.refreshToken.token)
       localStorageAuthService.setRefreshTokenExpiredAt(res.user.refreshToken.expiresIn)
 
 
       localStorageAuthService.setUserRole(res.user.accessToken.role)
+
       localStorageAuthService.setUserAvatar(res.avatar)
 
     }
