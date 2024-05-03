@@ -279,6 +279,7 @@ watchEffect(() => {
   user.value.sodienthoai = props.currentUser.sodienthoai;
   user.value.diachi = props.currentUser.diachi;
   user.value.chucvu = props.currentUser.chucvu;
+  console.log(props.currentUser.ngaysinh);
 });
 </script>
 
