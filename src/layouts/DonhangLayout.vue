@@ -56,6 +56,7 @@ const getAllDonhang = async () => {
   lengthPage.value = Math.ceil(res.totalItems / selectedValue.value);
   totalItems.value = res?.totalItems;
   //   console.log(typeof donhang);
+  // console.log(donhang.value.length);
 };
 
 const getKhachhang = async () => {
@@ -90,6 +91,15 @@ const getNameNhanvienById = (id) => {
   }
 };
 
+const getIdChitiethoadon = (id) => {
+  var lengCTDonhang = Object.keys(ctdh.value).length;
+  for (var i = 0; i < lengCTDonhang; i++) {
+    if (id === ctdh.value[i].donhangid) {
+      return ctdh.value[i].id;
+    }
+  }
+};
+
 watch(selectedValue, (newVal) => {
   query.limit = newVal;
   query.page = 1;
@@ -105,7 +115,7 @@ const getAllChitietdonhang = async () => {
   try {
     const response = await serviceChitietdonhang.getAllChitietdonhang();
     ctdh.value = response;
-    console.log(ctdh.value);
+    // console.log(ctdh.value[0].donhangid);
   } catch (error) {
     console.error('Error: ', error);
   }
@@ -117,6 +127,13 @@ const deleteDonhang = async () => {
       console.error('not found!');
       return;
     }
+    if (getIdChitiethoadon(id.value)) {
+      const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
+        getIdChitiethoadon(id.value),
+      );
+      console.log(deleteCtDonhang);
+    }
+
     const response = await serviceDonhang.deleteDonhang(id.value);
     dialogDelete.value = false;
     getAllDonhang();
@@ -259,14 +276,14 @@ const getTinhtrang = (id) => {
                 <a href="">Xem chi tiết</a>
               </td>
               <td class="text-left">
-                <v-btn
+                <!-- <v-btn
                   icon
                   size="small"
                   flat
                   @click="(dialogEdit = true), (currentKho = item), (idKho = item.id)"
                 >
                   <v-icon color="#8B909A" icon="mdi mdi-square-edit-outline"></v-icon>
-                </v-btn>
+                </v-btn> -->
                 <v-btn
                   icon
                   size="small"
