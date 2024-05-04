@@ -9,6 +9,7 @@ import { useKhachhang } from './components/khachhang/khachhang.store';
 import { serviceKhachhang } from './components/khachhang/khachhang';
 // import { serviceNhanvien } from './components/nhanvien/nhanvien';
 import { serviceUser } from '../layouts/components/user/user';
+import { serviceChitietdonhang } from '../layouts/components/chitietdonhang/chitietdonhang';
 
 import AddDonhang from '../components/donhang/AddDonhang.vue';
 // import EditKho from '../components/kho/EditKho.vue';
@@ -23,6 +24,8 @@ const dialogDelete = ref(false);
 
 const currentDonhang = ref('');
 const idDonhang = ref('');
+const ctdh = ref([]);
+const cthds = ref([]);
 
 const totalItems = ref('');
 
@@ -41,6 +44,7 @@ onMounted(async () => {
     getAllDonhang();
     getKhachhang();
     getNhanvien();
+    getAllChitietdonhang();
   } catch (error) {
     console.log(error);
   }
@@ -97,11 +101,15 @@ watch(page, (newVal) => {
   query.page = newVal;
   getAllDonhang();
 });
-
-// const searchLoaisanpham = computed(() => {
-//   const keyword = search.value.toLowerCase();
-//   return kho.value.filter((p) => p.tenkho.toLowerCase().includes(keyword));
-// });
+const getAllChitietdonhang = async () => {
+  try {
+    const response = await serviceChitietdonhang.getAllChitietdonhang();
+    ctdh.value = response;
+    console.log(ctdh.value);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+};
 
 const deleteDonhang = async () => {
   try {

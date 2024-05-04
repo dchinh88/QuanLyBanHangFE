@@ -24,6 +24,10 @@ class KhachhangService extends ApiService {
     async getDetailKhachhang(id: number): Promise<IBodyResponse<Khachhang>> {
         return this.client.get(`${this.baseUrl}/${id}`);
     }
+
+    async getKhachhangByPhone(phone: string): Promise<IBodyResponse<Khachhang>> {
+        return this.client.get(`${this.baseUrl}/phone/${phone}`);
+    }
 }
 
 export const serviceKhachhang = new KhachhangService({ baseUrl: '/QLKhachhang' }, axiosInstance)

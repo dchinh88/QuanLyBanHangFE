@@ -34,7 +34,7 @@
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
             <v-text-field
-              type="date"
+              readonly
               density="compact"
               variant="solo"
               single-line
@@ -50,6 +50,55 @@
           >
           <v-col
             ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Số điện thoại khách hàng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập số điện thoại khách hàng"
+              single-line
+              class="bg-white"
+              v-model="dienthoaikhField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              dienthoaikhField.errorMessage
+            }}</span></v-col
+          >
+        </v-row>
+
+        <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Họ tên
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập họ tên khách hàng"
+              single-line
+              class="bg-white"
+              v-model="hotenkhachhangField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              hotenkhachhangField.errorMessage
+            }}</span></v-col
+          >
+          <v-col
+            ><div
               class="text-medium-emphasis d-flex align-center font-weight-bold text-name mb-2"
             >
               Địa chỉ giao hàng
@@ -59,7 +108,7 @@
             <v-text-field
               density="compact"
               variant="solo"
-              label="Nhập giá sản phẩm"
+              label="Nhập địa chỉ giao hàng"
               single-line
               v-model="diachigiaohangField.value.value"
               class="bg-white"
@@ -72,80 +121,84 @@
             }}</span></v-col
           >
         </v-row>
-
         <v-row>
           <v-col
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
             >
-              Khách hàng
+              Chọn sản phẩm
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
 
-            <v-text-field
+            <v-select
               density="compact"
               variant="solo"
-              label="Nhập id khách hàng"
+              label="Chọn sản phẩm"
               single-line
+              :items="sanphams"
+              item-value="id"
+              item-title="tensanpham"
               class="bg-white"
-              v-model="khachhangidField.value.value"
+              v-model="sanphamidField.value.value"
               flat
               hide-details
               style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-            ></v-text-field>
-            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
-              khachhangidField.errorMessage
+            ></v-select>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              sanphamidField.errorMessage
             }}</span></v-col
           >
           <v-col
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
             >
-              Nhân viên
+              Đơn giá
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
 
             <v-text-field
               density="compact"
               variant="solo"
-              label="Nhập số màu sắc sản phẩm"
+              type="number"
+              readonly
+              label="Nhập đơn giá sản phẩm"
               single-line
               class="bg-white"
-              v-model="nhanvienidField.value.value"
+              v-model="dongiaField.value.value"
               flat
               hide-details
               style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
             ></v-text-field>
             <span class="error-message mt-1" style="position: absolute; right: 3%">{{
-              nhanvienidField.errorMessage
+              dongiaField.errorMessage
             }}</span></v-col
           >
         </v-row>
         <v-row>
-          <v-col
-            ><div
+          <v-col>
+            <div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
             >
-              Tình trạng
+              Số lượng
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
 
             <v-text-field
               density="compact"
               variant="solo"
-              readonly
+              type="number"
               label="Nhập số lượng sản phẩm"
               single-line
               class="bg-white"
-              v-model="tinhtrangidField.value.value"
+              v-model="soluongField.value.value"
               flat
               hide-details
               style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
             ></v-text-field>
             <span class="error-message mt-1" style="position: absolute; right: 51%">{{
-              tinhtrangidField.errorMessage
-            }}</span></v-col
-          >
+              soluongField.errorMessage
+            }}</span>
+          </v-col>
           <v-col
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
@@ -183,7 +236,7 @@
             <v-text-field
               density="compact"
               variant="solo"
-              label="Nhập số lượng tồn"
+              label="Nhập số tiền đã thanh toán"
               type="number"
               single-line
               class="bg-white"
@@ -208,6 +261,7 @@
               density="compact"
               variant="solo"
               single-line
+              label="Còn nợ"
               type="number"
               class="bg-white"
               v-model="connoField.value.value"
@@ -226,7 +280,7 @@
           padding-top: 6px;
           background-color: white;
           width: 748px;
-          margin-left: 0.5px;
+          margin-left: 0.4px;
           border-radius: 0 0 12px 12px;
         "
       >
@@ -244,7 +298,7 @@
             width="105"
             color="#0f60ff"
             class="text-capitalize"
-            @click="addProduct"
+            @click="addNewDonHang"
             flat
             style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
             >Tạo
@@ -259,13 +313,14 @@
   
   <script setup lang="ts">
 import { serviceProduct } from '../../layouts/components/product/product';
-import { Product } from '../../layouts/components/product/interface';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { showErrorNotification, showSuccessNotification } from '@/common/helpers';
-import { serviceKho } from '../../layouts/components/kho/kho';
-import { serviceLoaisanpham } from '../../layouts/components/loaisanpham/loaisanpham';
+import { serviceKhachhang } from '../../layouts/components/khachhang/khachhang';
+import { serviceDonhang } from '../../layouts/components/donhang/donhang';
+import { serviceChitietdonhang } from '../../layouts/components/chitietdonhang/chitietdonhang';
+import numeral from 'numeral';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -273,21 +328,15 @@ const props = defineProps<{
 
 const emits = defineEmits(['close', 'updateData']);
 
-const kho = ref([]);
-const khos = ref([]);
-
-const lsp = ref([]);
-const loaisanpham = ref([]);
+const khachhang = ref({});
+const donhang = ref([]);
+const donhangs = ref([]);
+const sanpham = ref([]);
+const sanphams = ref([]);
+const sp = ref({});
 
 const schema = yup.object({
-  ngaytaodon: yup
-    .date()
-    .required('Ngày tạo đơn là bắt buộc')
-    .test('Ngày tạo đơn không hợp lệ', (value) => {
-      const ngaytao = new Date(value);
-      const currenttime = new Date();
-      return ngaytao <= currenttime;
-    }),
+  ngaytaodon: yup.date().required('Ngày tạo đơn là bắt buộc'),
   diachigiaohang: yup.string().required('Địa chỉ giao hàng là bắt buộc'),
   khachhangid: yup.string().required('id khách hàng là bắt buộc'),
   nhanvienid: yup.string().required('id nhân viên là bắt buộc'),
@@ -298,98 +347,243 @@ const schema = yup.object({
     .min(1, 'Thành tiền không nhỏ hơn 1'),
   dathanhtoan: yup
     .string()
-    .required('Đã thanh toán là bắt buộc')
+    .required('Bạn chưa nhập số tiền đã thanh toán')
     .min(0, 'Đã thanh toán không nhỏ hơn 0'),
   conno: yup.string().required('Còn nợ là bắt buộc').min(0, 'Còn nợ không nhỏ hơn 0'),
+
+  // dongia: yup.string().required('Đơn giá là bắt buộc').min(1, 'Đơn giá không nhỏ hơn 1'),
+  soluong: yup
+    .string()
+    .required('Số lượng là bắt buộc')
+    .min(1, 'Số lượng không nhỏ hơn 1'),
+  sanphamid: yup.string().required('Bạn chưa chọn sản phẩm'),
+  // soluong: yup.string().required('Bạn chưa nhập số lượng'),
 });
+
+const formatMoney = (money) => {
+  return numeral(money).format('0,0') + ' ₫';
+};
 
 const { handleSubmit } = useForm({
   validationSchema: schema,
 });
 
-// const nameField = useField('name', {
-//   initialValues: product.value.name,
-// });
+const formatTime = (time) => {
+  const day = new Date(time).getDate();
+  const month = new Date(time).getMonth() + 1;
+  const year = new Date(time).getFullYear();
+  // return `${year}/${month}/${day}`;
+  const formatMonth = month >= 10 ? month : '0' + month;
+  const formatDay = day >= 10 ? day : '0' + day;
+  return year + '-' + formatMonth + '-' + formatDay;
+};
+
+const IdUser = localStorage.getItem('IDUSER');
+
 const ngaytaodonField = useField('ngaytaodon');
-const currentTime = new Date();
-ngaytaodonField.value.value = currentTime.toISOString();
+const time = new Date();
+ngaytaodonField.value.value = formatTime(time);
 const diachigiaohangField = useField('diachigiaohang');
 const khachhangidField = useField('khachhangid');
 const nhanvienidField = useField('nhanvienid');
+nhanvienidField.value.value = IdUser;
 const tinhtrangidField = useField('tinhtrangid');
 tinhtrangidField.value.value = 1;
 const thanhtienField = useField('thanhtien');
 const dathanhtoanField = useField('dathanhtoan');
 const connoField = useField('conno');
 
-const getKho = async () => {
-  const res = await serviceKho.getAllKho();
-  kho.value = res;
-  var lengthKho = Object.keys(kho.value).length;
+const dienthoaikhField = useField('dienthoaikh');
+const hotenkhachhangField = useField('hotenkh');
+const diachikhachhangField = useField('diachikh');
 
-  for (var i = 0; i < lengthKho - 1; i++) {
-    khos.value.push(kho.value[i]);
-  }
-  console.log(Object.keys(kho.value).length);
+const donhangidField = useField('donhangid');
+const sanphamidField = useField('sanphamid');
+const soluongField = useField('soluong');
+const dongiaField = useField('dongia');
+// formatMoney(dongiaField.value.value);
+
+// thanhtienField.value.value = dongiaField * soluongField;
+
+const getKhachhangByPhone = async () => {
+  const res = await serviceKhachhang.getKhachhangByPhone(dienthoaikhField.value.value);
+  khachhang.value = res;
+  console.log(khachhang.value);
+  khachhangidField.value.value = khachhang.value.id;
+  hotenkhachhangField.value.value = khachhang.value.hoten;
+  diachigiaohangField.value.value = diachikhachhangField.value.value =
+    khachhang.value.diachi;
+  console.log(hotenkhachhangField.value.value);
 };
 
-const getLoaisanpham = async () => {
-  const res = await serviceLoaisanpham.getAllLoaisanpham();
-  lsp.value = res;
-  var lengthLsp = Object.keys(lsp.value).length;
-  for (var i = 0; i < lengthLsp - 1; i++) {
-    loaisanpham.value.push(lsp.value[i]);
+const getAllDonhang = async () => {
+  const res = await serviceDonhang.getAllDonhang();
+  donhang.value = res;
+  var lengthDonhang = Object.keys(donhang.value).length;
+  for (var i = 0; i < lengthDonhang - 1; i++) {
+    donhangs.value.push(donhang.value[i]);
+    // console.log(donhang.value[0].id);
   }
+  // console.log(lengthDonhang - 2);
+
+  // console.log(donhang.value[lengthDonhang - 2].id);
+  donhangidField.value.value = donhang.value[lengthDonhang - 2].id;
+  // console.log(donhangidField.value.value);
+};
+
+const getAllSanpham = async () => {
+  const res = await serviceProduct.getAllProduct();
+  sanpham.value = res;
+  // console.log(sanpham.value);
+
+  var lengthSanpham = Object.keys(sanpham.value).length;
+  for (var i = 0; i < lengthSanpham - 1; i++) {
+    sanphams.value.push(sanpham.value[i]);
+  }
+  dongiaField.value.value = sanpham.value.dongia;
+  // console.log(lengthSanpham);
+
+  // console.log(sanphams.value);
+};
+
+const getSanphamById = async () => {
+  const res = await serviceProduct.getProductDetail(sanphamidField.value.value);
+  sp.value = res;
+  console.log(sp.value.giaban);
+
+  dongiaField.value.value = sp.value.giaban;
+  // return formatMoney(dongiaField.value.value);
+};
+
+const tinhTongtien = async () => {
+  let tongtien = await (dongiaField.value.value * soluongField.value.value);
+  // return (thanhtienField.value.value = tongtien);
+  return (thanhtienField.value.value = tongtien);
+};
+
+const tinhSono = async () => {
+  let sono = await (thanhtienField.value.value - dathanhtoanField.value.value);
+  // let format = formatMoney(sono);
+  return (connoField.value.value = sono);
 };
 
 onMounted(async () => {
-  getKho();
-  getLoaisanpham();
+  try {
+    getAllDonhang();
+    getAllSanpham();
+  } catch (error) {
+    console.log(error);
+  }
 });
 
-const addProduct = handleSubmit(async () => {
+watch(
+  () => soluongField.value.value,
+  async (newVal, oldValue) => {
+    if (newVal !== oldValue) {
+      await tinhTongtien();
+    }
+  },
+);
+
+watch(
+  () => dathanhtoanField.value.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await tinhSono();
+    }
+  },
+);
+
+watch(
+  () => sanphamidField.value.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await getSanphamById();
+      console.log(sanphamidField.value.value);
+    }
+  },
+);
+
+watch(
+  () => dienthoaikhField.value.value,
+  async (newVal, oldVal) => {
+    // Kiểm tra nếu giá trị mới khác giá trị cũ
+    if (newVal !== oldVal) {
+      await setTimeout(() => {
+        getKhachhangByPhone();
+        // console.log(khachhang.value.hoten);
+      }, 2000);
+    }
+  },
+);
+
+const addChitietdonhang = handleSubmit(async () => {
   try {
     const formData = new FormData();
-    formData.append('loaisanphamid', loaisanphamField.value.value);
-    formData.append('tensanpham', tensanphamField.value.value);
-    formData.append('giaban', giabanField.value.value);
-    formData.append('chatlieu', chatlieuField.value.value);
-    formData.append('macsac', mausacField.value.value);
-    formData.append('baohanh', baohanhField.value.value);
-    formData.append('mota', motaField.value.value);
-    formData.append('khoid', khoField.value.value);
-    formData.append('soluongton', soluongtonField.value.value);
+    formData.append('donhangid', donhangidField.value.value + 1);
+    formData.append('sanphamid', sanphamidField.value.value);
+    formData.append('soluong', soluongField.value.value);
+    formData.append('dongia', dongiaField.value.value);
+
+    const response = await serviceChitietdonhang.addChitietdonhang(formData);
+    console.log(response);
+    if (response.success) {
+      donhangidField.value.value = '';
+      sanphamidField.value.value = '';
+      soluongField.value.value = '';
+      dongiaField.value.value = '';
+      // showSuccessNotification()
+    }
+  } catch (error) {
+    console.error('Error', error);
+  }
+});
+
+const addDonhang = handleSubmit(async () => {
+  try {
+    const formData = new FormData();
+    formData.append('ngaytaodon', ngaytaodonField.value.value);
+    formData.append('diachigiaohang', diachigiaohangField.value.value);
+    formData.append('khachhangid', khachhangidField.value.value);
+    formData.append('nhanvienid', nhanvienidField.value.value);
+    formData.append('tinhtrangid', tinhtrangidField.value.value);
+    formData.append('thanhtien', thanhtienField.value.value);
+    formData.append('dathanhtoan', dathanhtoanField.value.value);
+    formData.append('conno', connoField.value.value);
     // formData.append('image', imageFile.value);
 
-    const response = await serviceProduct.addProduct(formData);
+    const response = await serviceDonhang.addDonhang(formData);
 
     console.log(response);
 
     if (response.success) {
-      loaisanphamField.value.value = '';
-      tensanphamField.value.value = '';
-      giabanField.value.value = '';
-      chatlieuField.value.value = '';
-      mausacField.value.value = '';
-      baohanhField.value.value = '';
-      motaField.value.value = '';
-      khoField.value.value = '';
-      soluongtonField.value.value = '';
-      // imageFile.value = null;
-      // emptyForm();
+      // getAllDonhang();
+      diachigiaohangField.value.value = '';
+      khachhangidField.value.value = '';
+      nhanvienidField.value.value = '';
+      tinhtrangidField.value.value = '';
+      thanhtienField.value.value = '';
+      dathanhtoanField.value.value = '';
+      connoField.value.value = '';
 
       emits('close');
       emits('updateData');
 
-      showSuccessNotification('Thêm sản phẩm thành công');
+      showSuccessNotification('Thêm đơn hàng thành công');
     } else {
-      showErrorNotification('Thêm sản phẩm thất bại');
+      showErrorNotification('Thêm đơn hàng thất bại');
     }
   } catch (error) {
-    showErrorNotification('Thêm sản phẩm thất bại');
+    showErrorNotification('Thêm đơn hàng thất bại');
     console.error('Error', error);
   }
 });
+
+const addNewDonHang = async () => {
+  addDonhang();
+  await getAllDonhang();
+  await addChitietdonhang();
+};
 </script>
   
   
