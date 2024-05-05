@@ -2,39 +2,26 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { showSuccessNotification } from '@/common/helpers';
-import { useDonhang } from './components/donhang/donhang.store';
-import { serviceDonhang } from './components/donhang/donhang';
+import { useCongnocuakhachhang } from './components/congnocuakhachhang/congnocuakhachhang.store';
+import { serviceKho } from './components/kho/kho';
 import numeral from 'numeral';
-import { useKhachhang } from './components/khachhang/khachhang.store';
-import { serviceKhachhang } from './components/khachhang/khachhang';
-// import { serviceNhanvien } from './components/nhanvien/nhanvien';
-import { serviceUser } from '../layouts/components/user/user';
-import { serviceChitietdonhang } from '../layouts/components/chitietdonhang/chitietdonhang';
-import { serviceCongnocuakhachhang } from '../layouts/components/congnocuakhachhang/congnocuakhachhang';
-
-import AddDonhang from '../components/donhang/AddDonhang.vue';
+// import AddKho from '../components/kho/AddKho.vue';
 // import EditKho from '../components/kho/EditKho.vue';
 
-const { fetchDonhang, query } = useDonhang();
-// const { fetchKhachhang } = useKhachhang();
+const { fetchCongnocuakhachhang, query } = useCongnocuakhachhang();
 
 const page = ref(1);
 const dialogAdd = ref(false);
 const dialogEdit = ref(false);
 const dialogDelete = ref(false);
 
-const currentDonhang = ref('');
-const idDonhang = ref('');
-const ctdh = ref([]);
-const cthds = ref([]);
-const cnkh = ref([]);
+const currentKho = ref('');
+const idKho = ref('');
+const tongcongno = ref(0);
 
 const totalItems = ref('');
 
-const donhang = ref([]);
-const khachhang = ref([]);
-const nhanvien = ref([]);
-
+const congnocuakhachhang = ref([]);
 const id = ref(null);
 const search = ref('');
 
@@ -43,72 +30,21 @@ const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
 
 onMounted(async () => {
   try {
-    getAllDonhang();
-    getKhachhang();
-    getNhanvien();
-    getAllChitietdonhang();
     getAllCongnocuakhachhang();
   } catch (error) {
     console.log(error);
   }
 });
 
-const getAllDonhang = async () => {
-  const res = await fetchDonhang();
-  donhang.value = res.data;
+const getAllCongnocuakhachhang = async () => {
+  const res = await fetchCongnocuakhachhang();
+  congnocuakhachhang.value = res.data;
   lengthPage.value = Math.ceil(res.totalItems / selectedValue.value);
   totalItems.value = res?.totalItems;
-  //   console.log(typeof donhang);
-  // console.log(donhang.value.length);
-};
-
-const getKhachhang = async () => {
-  const res = await serviceKhachhang.getAllKhachhang();
-  khachhang.value = res;
-  console.log(khachhang.value);
-};
-
-const getNhanvien = async () => {
-  const res = await serviceUser.getAllUser();
-  nhanvien.value = res;
-  console.log(nhanvien.value);
-};
-
-const getNameKhachhangById = (id) => {
-  var lengthKhachhang = Object.keys(khachhang.value).length;
-
-  for (var i = 0; i < lengthKhachhang; i++) {
-    if (id === khachhang.value[i].id) {
-      return khachhang.value[i].hoten;
-    }
-  }
-};
-
-const getNameNhanvienById = (id) => {
-  var lengthNhanvien = Object.keys(nhanvien.value).length;
-
-  for (var i = 0; i < lengthNhanvien; i++) {
-    if (id === nhanvien.value.items[i].id) {
-      return nhanvien.value.items[i].tennhanvien;
-    }
-  }
-};
-
-const getIdChitiethoadon = (id) => {
-  var lengCTDonhang = Object.keys(ctdh.value).length;
-  for (var i = 0; i < lengCTDonhang - 1; i++) {
-    if (id === ctdh.value[i].donhangid) {
-      return ctdh.value[i].id;
-    }
-  }
-};
-
-const getIdCongnocuakhachhang = (id) => {
-  var lengthCongnno = Object.keys(cnkh.value).length;
-  for (var i = 0; i < lengthCongnno - 1; i++) {
-    if (id === cnkh.value[i].donhangid) {
-      return cnkh.value[i].id;
-    }
+  const congnoLength = congnocuakhachhang.value.length;
+  for (var i = 0; i < congnoLength; i++) {
+    tongcongno.value += congnocuakhachhang.value[i].sotienconno;
+    // tongno += congnocuakhachhang.value[i].sotienconno;
   }
 };
 
@@ -116,71 +52,29 @@ watch(selectedValue, (newVal) => {
   query.limit = newVal;
   query.page = 1;
   page.value = 1;
-  getAllDonhang();
+  getAllCongnocuakhachhang();
 });
 
 watch(page, (newVal) => {
   query.page = newVal;
-  getAllDonhang();
+  getAllCongnocuakhachhang();
 });
-const getAllChitietdonhang = async () => {
-  try {
-    const response = await serviceChitietdonhang.getAllChitietdonhang();
-    ctdh.value = response;
-    // console.log(ctdh.value[0].donhangid);
-  } catch (error) {
-    console.error('Error: ', error);
-  }
-  // var lengCTDonhang = Object.keys(ctdh.value).length;
-  // var lengthCongnno = Object.keys(cnkh.value).length;
 
-  // console.log(lengCTDonhang);
-  // console.log(lengthCongnno);
-};
+// const searchLoaisanpham = computed(() => {
+//   const keyword = search.value.toLowerCase();
+//   return kho.value.filter((p) => p.tenkho.toLowerCase().includes(keyword));
+// });
 
-const getAllCongnocuakhachhang = async () => {
-  try {
-    const response = await serviceCongnocuakhachhang.getAllCongnocuaKH();
-    cnkh.value = response;
-    // console.log(cnkh.value);
-  } catch (error) {
-    console.error('Error: ', error);
-  }
-};
-
-const deleteDonhang = async () => {
+const deleteLoaisanpham = async () => {
   try {
     if (!id.value) {
       console.error('not found!');
       return;
     }
-    if (getIdChitiethoadon(id.value) && getIdCongnocuakhachhang(id.value)) {
-      const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
-        getIdChitiethoadon(id.value),
-      );
-      const deleteCongnoKH = await serviceCongnocuakhachhang.deleteCongnocuaKH(
-        getIdCongnocuakhachhang(id.value),
-      );
-      console.log(deleteCtDonhang);
-      console.log(deleteCongnoKH);
-      const response = await serviceDonhang.deleteDonhang(id.value);
-      console.log(response);
-    } else if (getIdChitiethoadon(id.value)) {
-      const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
-        getIdChitiethoadon(id.value),
-      );
-      console.log(deleteCtDonhang);
-
-      const response = await serviceDonhang.deleteDonhang(id.value);
-      console.log(response);
-    } else {
-      const response = await serviceDonhang.deleteDonhang(id.value);
-      console.log(response);
-    }
-
+    const response = await serviceKho.deleteKho(id.value);
     dialogDelete.value = false;
-    getAllDonhang();
-    showSuccessNotification('Xóa đơn hàng thành công');
+    getAllCongnocuakhachhang();
+    showSuccessNotification('Xóa loại sản phẩm thành công');
     console.log('Đã xóa: ', response);
   } catch (error) {
     console.error('Error!');
@@ -188,7 +82,9 @@ const deleteDonhang = async () => {
     id.value = null;
   }
 };
-
+const formatMoney = (money) => {
+  return numeral(money).format('0,0') + ' ₫';
+};
 const formatTime = (time) => {
   const day = new Date(time).getDate();
   const month = new Date(time).getMonth() + 1;
@@ -197,26 +93,6 @@ const formatTime = (time) => {
   const formatMonth = month >= 10 ? month : '0' + month;
   const formatDay = day >= 10 ? day : '0' + day;
   return year + '/' + formatMonth + '/' + formatDay;
-};
-
-const formatMoney = (money) => {
-  return numeral(money).format('0,0') + ' ₫';
-};
-
-const getTinhtrang = (id) => {
-  if (id == 1) {
-    return 'Chờ Xác Nhận';
-  } else if (id == 2) {
-    return 'Đã Xác Nhận';
-  } else if (id == 3) {
-    return 'Đang Xử Lý';
-  } else if (id == 4) {
-    return 'Đã Giao Hàng';
-  } else if (id == 5) {
-    return 'Hoàn Thành';
-  } else if (id == 6) {
-    return 'Hủy Bỏ';
-  }
 };
 </script>
 
@@ -255,30 +131,25 @@ const getTinhtrang = (id) => {
         <v-table style="border-radius: 12px 12px 0 0">
           <thead>
             <tr>
-              <!-- <th style="height: 47px" class="text-table text-uppercase">STT</th> -->
-              <th style="height: 47px" class="text-table text-uppercase">Ngày tạo đơn</th>
+              <th style="height: 47px" class="text-table text-uppercase">Họ tên</th>
+              <th style="height: 47px" class="text-table text-uppercase">ID đơn hàng</th>
               <th style="height: 47px" class="text-table text-uppercase">
-                Địa chỉ giao hàng
+                Tổng tiền phải thanh toán
               </th>
-              <th style="height: 47px" class="text-table text-uppercase">Khách hàng</th>
               <th style="height: 47px" class="text-table text-uppercase">
-                Nhân viên tạo đơn
-              </th>
-              <th style="height: 47px" class="text-table text-uppercase">Tình trạng</th>
-              <th style="height: 47px" class="text-table text-uppercase">Thành tiền</th>
-              <th style="height: 47px" class="text-table text-uppercase">
-                Đã thanh toán
+                Số tiền đã thanh toán
               </th>
               <th style="height: 47px" class="text-table text-uppercase">Còn nợ</th>
-              <th style="height: 47px" class="text-table text-uppercase"></th>
-
-              <th style="height: 47px" class="text-table text-uppercase text-left">
-                Action
+              <th style="height: 47px" class="text-table text-uppercase">
+                Hạn thanh toán
               </th>
+              <!-- <th style="height: 47px" class="text-table text-uppercase text-left">
+                Action
+              </th> -->
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in donhang" :key="i">
+            <tr v-for="(item, i) in congnocuakhachhang" :key="i">
               <!-- <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ i }}
               </td> -->
@@ -292,41 +163,32 @@ const getTinhtrang = (id) => {
                   text-overflow: ellipsis;
                 "
               >
-                {{ formatTime(item.ngaytaodon) }}
+                {{ item.hoten }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ item.diachigiaohang }}
+                {{ item.donhangid }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ getNameKhachhangById(item.khachhangid) }}
+                {{ formatMoney(item.tongtienphaithanhtoa) }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ getNameNhanvienById(item.nhanvienid) }}
+                {{ formatMoney(item.sotiendathanhtoan) }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ getTinhtrang(item.tinhtrangid) }}
+                {{ formatMoney(item.sotienconno) }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.thanhtien) }}
+                {{ formatTime(item.hanthanhtoan) }}
               </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.dathanhtoan) }}
-              </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.conno) }}
-              </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                <a href="">Xem chi tiết</a>
-              </td>
-              <td class="text-left">
-                <!-- <v-btn
+              <!-- <td class="text-left">
+                <v-btn
                   icon
                   size="small"
                   flat
                   @click="(dialogEdit = true), (currentKho = item), (idKho = item.id)"
                 >
                   <v-icon color="#8B909A" icon="mdi mdi-square-edit-outline"></v-icon>
-                </v-btn> -->
+                </v-btn>
                 <v-btn
                   icon
                   size="small"
@@ -335,6 +197,32 @@ const getTinhtrang = (id) => {
                 >
                   <v-icon color="#8B909A" icon="mdi mdi-trash-can-outline"> </v-icon>
                 </v-btn>
+              </td> -->
+            </tr>
+            <tr>
+              <td
+                class="text-name-user"
+                style="
+                  padding: 18px 0 18px 18px;
+                  white-space: nowrap;
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Tổng công nợ của khách hàng:
+              </td>
+              <td
+                class="text-name-user text-red"
+                style="
+                  padding: 18px 0 18px 18px;
+                  white-space: nowrap;
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                {{ formatMoney(tongcongno) }}
               </td>
             </tr>
           </tbody>
@@ -381,13 +269,13 @@ const getTinhtrang = (id) => {
       </v-row>
     </div>
 
-    <add-donhang
+    <!-- <add-kho
       :dialogAdd="dialogAdd"
       @close="dialogAdd = false"
-      @updateData="getAllDonhang()"
+      @updateData="getAllKho()"
     />
 
-    <!-- <edit-kho
+    <edit-kho
       :dialogEdit="dialogEdit"
       :currentKho="currentKho"
       :idKho="idKho"
@@ -407,7 +295,7 @@ const getTinhtrang = (id) => {
         <v-row align="center">
           <v-spacer></v-spacer>
           <v-col cols="5" variant="text">
-            <v-btn @click="deleteDonhang">Đồng ý</v-btn>
+            <v-btn @click="deleteLoaisanpham">Đồng ý</v-btn>
           </v-col>
           <v-col cols="6" variant="text">
             <v-btn @click="dialogDelete = false">Hủy bỏ</v-btn>

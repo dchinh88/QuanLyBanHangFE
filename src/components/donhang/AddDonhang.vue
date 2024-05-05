@@ -320,6 +320,7 @@ import { showErrorNotification, showSuccessNotification } from '@/common/helpers
 import { serviceKhachhang } from '../../layouts/components/khachhang/khachhang';
 import { serviceDonhang } from '../../layouts/components/donhang/donhang';
 import { serviceChitietdonhang } from '../../layouts/components/chitietdonhang/chitietdonhang';
+import { serviceCongnocuakhachhang } from '../../layouts/components/congnocuakhachhang/congnocuakhachhang';
 import numeral from 'numeral';
 
 const props = defineProps<{
@@ -334,6 +335,8 @@ const donhangs = ref([]);
 const sanpham = ref([]);
 const sanphams = ref([]);
 const sp = ref({});
+
+const kh = ref([]);
 
 const schema = yup.object({
   ngaytaodon: yup.date().required('Ngày tạo đơn là bắt buộc'),
@@ -378,6 +381,16 @@ const formatTime = (time) => {
   return year + '-' + formatMonth + '-' + formatDay;
 };
 
+const formatTimeThanhtoan = (time) => {
+  const day = new Date(time).getDate();
+  const month = new Date(time).getMonth() + 4;
+  const year = new Date(time).getFullYear();
+  // return `${year}/${month}/${day}`;
+  const formatMonth = month >= 10 ? month : '0' + month;
+  const formatDay = day >= 10 ? day : '0' + day;
+  return year + '-' + formatMonth + '-' + formatDay;
+};
+
 const IdUser = localStorage.getItem('IDUSER');
 
 const ngaytaodonField = useField('ngaytaodon');
@@ -403,17 +416,49 @@ const soluongField = useField('soluong');
 const dongiaField = useField('dongia');
 // formatMoney(dongiaField.value.value);
 
+const iddonhangField = useField('iddonhang');
+const hotenField = useField('hoten');
+const tienphaithanhtoanField = useField('tienphaithanhtoan');
+const tiendathanhtoanField = useField('tiendathanhtoan');
+const tienconnoField = useField('tienconno');
+const hanphaithanhtoanField = useField('hanphaithanhtoan');
+
+hanphaithanhtoanField.value.value = formatTimeThanhtoan(time);
+// tiendathanhtoanField.value.value = dathanhtoanField.value.value;
+
 // thanhtienField.value.value = dongiaField * soluongField;
 
 const getKhachhangByPhone = async () => {
   const res = await serviceKhachhang.getKhachhangByPhone(dienthoaikhField.value.value);
+  // if (res.success) {
+  //   khachhang.value = res;
+  //   // console.log(khachhang.value);
+  //   khachhangidField.value.value = khachhang.value.id;
+  //   hotenField.value.value = hotenkhachhangField.value.value = khachhang.value.hoten;
+  //   diachigiaohangField.value.value = diachikhachhangField.value.value =
+  //     khachhang.value.diachi;
+  //   // console.log(hotenkhachhangField.value.value);
+  // } else {
+  //   await addKhachhangWhenNotExists();
+  //   const res = await serviceKhachhang.getAllKhachhang();
+  //   kh.value = res;
+  //   var lengthKhachhang = Object.keys(kh.value).length;
+  //   // for(var i=0;i<lengthKhachhang-1;i++) {
+  //   khachhangidField.value.value = kh.value[lengthKhachhang - 1].id;
+  //   hotenField.value.value = hotenkhachhangField.value.value =
+  //     kh.value[lengthKhachhang - 1].hoten;
+  //   diachigiaohangField.value.value = diachikhachhangField.value.value =
+  //     kh.value[lengthKhachhang - 1].diachi;
+  //   // }
+  // }
   khachhang.value = res;
-  console.log(khachhang.value);
+  // console.log(khachhang.value);
   khachhangidField.value.value = khachhang.value.id;
-  hotenkhachhangField.value.value = khachhang.value.hoten;
+  hotenField.value.value = hotenkhachhangField.value.value = khachhang.value.hoten;
   diachigiaohangField.value.value = diachikhachhangField.value.value =
     khachhang.value.diachi;
-  console.log(hotenkhachhangField.value.value);
+  // console.log(hotenkhachhangField.value.value);
+  console.log(res.success);
 };
 
 const getAllDonhang = async () => {
@@ -426,8 +471,9 @@ const getAllDonhang = async () => {
   }
   // console.log(lengthDonhang - 2);
 
-  // console.log(donhang.value[lengthDonhang - 2].id);
-  donhangidField.value.value = donhang.value[lengthDonhang - 2].id;
+  console.log(donhang.value[lengthDonhang - 2].id);
+  iddonhangField.value.value = donhangidField.value.value =
+    donhang.value[lengthDonhang - 2].id;
   // console.log(donhangidField.value.value);
 };
 
@@ -458,13 +504,13 @@ const getSanphamById = async () => {
 const tinhTongtien = async () => {
   let tongtien = await (dongiaField.value.value * soluongField.value.value);
   // return (thanhtienField.value.value = tongtien);
-  return (thanhtienField.value.value = tongtien);
+  return (tienphaithanhtoanField.value.value = thanhtienField.value.value = tongtien);
 };
 
 const tinhSono = async () => {
   let sono = await (thanhtienField.value.value - dathanhtoanField.value.value);
   // let format = formatMoney(sono);
-  return (connoField.value.value = sono);
+  return (tienconnoField.value.value = connoField.value.value = sono);
 };
 
 onMounted(async () => {
@@ -517,6 +563,58 @@ watch(
   },
 );
 
+// const dienthoaikhField = useField('dienthoaikh');
+// const hotenkhachhangField = useField('hotenkh');
+// const diachikhachhangField = useField('diachikh');
+const addKhachhangWhenNotExists = handleSubmit(async () => {
+  try {
+    const formData = new FormData();
+    formData.append('hoten', hotenkhachhangField.value.value);
+    formData.append('diachi', diachikhachhangField.value.value);
+    formData.append('sodienthoai', dienthoaikhField.value.value);
+
+    const response = await serviceKhachhang.addKhachhang(formData);
+    if (response.success) {
+      hotenkhachhangField.value.value = '';
+      diachikhachhangField.value.value = '';
+      dienthoaikhField.value.value = '';
+      // showSuccessNotification('Thêm đơn hàng thành công');
+    }
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+});
+
+// const iddonhangField = useField('iddonhang');
+// const hotenField = useField('hoten');
+// const tienphaithanhtoanField = useField('tienphaithanhtoan');
+// const tienconnoField = useField('tienconno');
+// const hanphaithanhtoanField = useField('hanphaithanhtoan');
+const addCongnocuakhachhang = handleSubmit(async () => {
+  try {
+    const formData = new FormData();
+    formData.append('donhangid', iddonhangField.value.value + 1);
+    formData.append('hoten', hotenField.value.value);
+    formData.append('tongtienphaithanhtoa', tienphaithanhtoanField.value.value);
+    formData.append('sotiendathanhtoan', dathanhtoanField.value.value);
+    formData.append('sotienconno', tienconnoField.value.value);
+    formData.append('hanthanhtoan', hanphaithanhtoanField.value.value);
+
+    const response = await serviceCongnocuakhachhang.addCongnocuaKH(formData);
+    console.log(response);
+    if (response.success) {
+      iddonhangField.value.value = '';
+      hotenField.value.value = '';
+      tienphaithanhtoanField.value.value = '';
+      // tiendathanhtoanField.value.value = '';
+      tienconnoField.value.value = '';
+      hanphaithanhtoanField.value.value = '';
+    }
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+});
+
 const addChitietdonhang = handleSubmit(async () => {
   try {
     const formData = new FormData();
@@ -553,10 +651,16 @@ const addDonhang = handleSubmit(async () => {
     // formData.append('image', imageFile.value);
 
     const response = await serviceDonhang.addDonhang(formData);
+    if (connoField.value.value > 0) {
+      await addCongnocuakhachhang();
+    }
 
     console.log(response);
 
     if (response.success) {
+      // if (connoField.value.value > 0) {
+      //   addCongnocuakhachhang();
+      // }
       // getAllDonhang();
       diachigiaohangField.value.value = '';
       khachhangidField.value.value = '';
@@ -581,8 +685,10 @@ const addDonhang = handleSubmit(async () => {
 
 const addNewDonHang = async () => {
   addDonhang();
+  // addCongnocuakhachhang();
   await getAllDonhang();
   await addChitietdonhang();
+  // await addCongnocuakhachhang();
 };
 </script>
   
