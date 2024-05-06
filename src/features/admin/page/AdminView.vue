@@ -155,7 +155,7 @@
               dot
             >
               <v-avatar @click="dialogProfile = true">
-                <v-img :src="AvatarUser" alt="John"></v-img>
+                <v-img :src="image + AvatarUser" alt="John"></v-img>
               </v-avatar>
             </v-badge>
             <!-- <v-btn color="primary" v-bind="props"> Dropdown </v-btn> -->
@@ -183,6 +183,7 @@
 
       <v-main style="background-color: #f5f5f9">
         <!--  -->
+        <tongquan-layout v-if="option == 0" />
         <loaisanpham-layout v-if="option == 1" />
         <main-layout v-if="option == 2" />
         <secondary-layout v-if="option == 3" />
@@ -215,6 +216,7 @@ import KhoLayout from '@/layouts/KhoLayout.vue';
 import NhacungcapLayout from '@/layouts/NhacungcapLayout.vue';
 import DonhangLayout from '@/layouts/DonhangLayout.vue';
 import CongnocuakhachhangLayout from '@/layouts/CongnocuakhachhangLayout.vue';
+import TongquanLayout from '@/layouts/TongquanLayout.vue';
 import router from '@/plugins/vue-router';
 import Page403 from './Page403.vue';
 
@@ -228,6 +230,8 @@ const option = ref(2);
 const Profile = ref(false);
 
 const items = ref([{ title: 'Xem profile' }, { title: 'Đăng xuất' }]);
+
+const image = 'data:image/jpeg;base64, ';
 
 const ROLE = localStorage.getItem('ROLE');
 const AvatarUser = localStorage.getItem('AVATAR');

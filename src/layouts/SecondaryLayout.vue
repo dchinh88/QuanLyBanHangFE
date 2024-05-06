@@ -3,9 +3,12 @@ import { computed, onMounted, ref, watch } from 'vue';
 import { DATE_TIME_FORMAT, DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useUser } from '../layouts/components/user/user.store';
 import { serviceUser } from '../layouts/components/user/user';
+import { serviceAvatar } from '../layouts/components/uploadAvatar/uploadAvatar';
 import EditUser from '../components/user/EditUser.vue';
 import AddUser from '../components/user/AddUser.vue';
+import AddAvatarUser from '../components/user/AddAvatarUser.vue';
 import { showSuccessNotification } from '@/common/helpers';
+import avatar_define from '@/assets/images/avatar_mac_dinh.jpg';
 
 const { fetchUser, query } = useUser();
 
@@ -13,6 +16,7 @@ const page = ref(1);
 const dialogAdd = ref(false);
 const dialogEdit = ref(false);
 const dialogDelete = ref(false);
+const dialogAddAvatar = ref(false);
 
 const currentUser = ref('');
 const idUser = ref('');
@@ -23,12 +27,17 @@ const user = ref([]);
 const id = ref(null);
 const search = ref('');
 
+const avatar = ref([]);
+const image = 'data:image/jpeg;base64, ';
+// const lengthAvatar = ref(0);
+
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
 
 onMounted(async () => {
   try {
     getAllUser();
+    getAllAvatar();
   } catch (error) {
     console.log(error);
   }
@@ -40,6 +49,26 @@ const getAllUser = async () => {
   lengthPage.value = Math.ceil(res.totalItems / selectedValue.value);
   totalItems.value = res?.totalItems;
 };
+
+const getAllAvatar = async () => {
+  const res = await serviceAvatar.getAllAvatar();
+  avatar.value = res;
+  // console.log(avatar.value[0].avatar1);
+  // console.log(Object.keys(avatar.value).length - 1);
+};
+
+const getAvatarById = (id) => {
+  var lengthAvatar = Object.keys(avatar.value).length - 1;
+  for (var i = 0; i < lengthAvatar; i++) {
+    if (id === avatar.value[i].nhanvienId) {
+      return avatar.value[i].avatar1;
+    }
+  }
+};
+
+// const deleteAvatar = (id) => {
+//   const res = await
+// }
 
 watch(selectedValue, (newVal) => {
   query.limit = newVal;
@@ -74,10 +103,12 @@ const deleteUser = async () => {
       console.error('not found!');
       return;
     }
+    const deleteAvatar = await serviceAvatar.deleteAvatar(id.value);
     const response = await serviceUser.deleteUSer(id.value);
     dialogDelete.value = false;
     getAllUser();
     showSuccessNotification('Xóa người dùng thành công');
+    console.log('Da xoa avatar: ', deleteAvatar);
     console.log('Da xoa: ', response);
   } catch (error) {
     console.error('Loiiiiiiiiiiiiiiiiiiiiii!');
@@ -138,6 +169,7 @@ const deleteUser = async () => {
               </th>
               <th style="height: 47px" class="text-table text-uppercase">Email</th>
               <th style="height: 47px" class="text-table text-uppercase">Chức vụ</th>
+              <th style="height: 47px" class="text-table text-uppercase">Avatar</th>
               <th style="height: 47px" class="text-table text-uppercase">Hành động</th>
             </tr>
           </thead>
@@ -183,10 +215,30 @@ const deleteUser = async () => {
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ item.email }}
               </td>
+
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ item.chucvu }}
               </td>
+              <td style="padding: 18px 0 18px 18px" class="text-price-user">
+                <v-img
+                  style="width: 35px; height: 35px; border-radius: 2px"
+                  :src="
+                    getAvatarById(item.id)
+                      ? image + getAvatarById(item.id)
+                      : avatar_define
+                  "
+                ></v-img>
+              </td>
               <td class="text-left">
+                <v-btn
+                  icon
+                  size="small"
+                  flat
+                  @click="(dialogAddAvatar = true), (idUser = item.id)"
+                >
+                  <v-icon color="#8B909A" icon="mdi-file-image-plus"></v-icon>
+                </v-btn>
+
                 <v-btn
                   icon
                   size="small"
@@ -261,6 +313,13 @@ const deleteUser = async () => {
       :idUser="idUser"
       @close="dialogEdit = false"
       @updateData="getAllUser()"
+    />
+
+    <add-avatar-user
+      :dialogAddAvatar="dialogAddAvatar"
+      @close="dialogAddAvatar = false"
+      :idUser="idUser"
+      @updateData="getAllAvatar"
     />
 
     <!-- <h1>haha</h1> -->

@@ -28,8 +28,11 @@ export const useAuthStore = defineStore('authStore', () => {
 
 
       localStorageAuthService.setUserRole(res.user.accessToken.role)
+      localStorageAuthService.setUserAvatar(res.user.accessToken.avatar)
+      // console.log(res.user.accessToken.avatar);
 
-      localStorageAuthService.setUserAvatar(res.avatar)
+
+      // localStorageAuthService.setUserAvatar(res.user.accessToken.avatar)
 
     }
     return res;
