@@ -8,6 +8,7 @@ import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useProduct } from '../layouts/components/product/product.store';
 import { showSuccessNotification } from '@/common/helpers';
 import { serviceKho } from '../layouts/components/kho/kho';
+import { debounce } from 'lodash';
 
 const { fetchProducts, query } = useProduct();
 
@@ -51,30 +52,39 @@ const getAllProduct = async () => {
   totalItems.value = res?.totalItems;
 };
 
-// const getAllProduct = async () => {
-//   const productList = await serviceProduct.getAllProduct();
-//   lengthPage.value = Math.ceil(productList.data.totalItems / selectedValue.value);
-//   products.value = productList.data.items;
-// };
+const getProductByName = async (name) => {
+  const productList = await serviceProduct.getProductByName(name);
+  products.value = productList;
+};
 
 watch(selectedValue, (newVal) => {
   query.limit = newVal;
   query.page = 1;
   page.value = 1;
   getAllProduct();
-  // GetAllKho();
 });
 
 watch(page, (newVal) => {
   query.page = newVal;
   getAllProduct();
-  // GetAllKho();
 });
 
-const searchProduct = computed(() => {
-  const keyword = search.value.toLowerCase();
-  return products.value.filter((p) => p.tensanpham.toLowerCase().includes(keyword));
-});
+const delaySearch = debounce((name) => {
+  if (name !== '') {
+    getProductByName(name);
+  } else {
+    getAllProduct();
+  }
+}, 1000);
+
+watch(
+  () => search.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await delaySearch(newVal);
+    }
+  },
+);
 
 const closeDialogEdit = () => {
   dialogEdit.value = false;
@@ -96,21 +106,6 @@ const deleteProduct = async () => {
     console.error('Loiiiiiiiiiiiiiiiiiiiiii!');
   } finally {
     id.value = null;
-  }
-};
-
-const getTenkho = (id) => {
-  // if (!Array.isArray(khos.value)) {
-  //   console.error('khos.value is not an array');
-  //   return ''; // Trả về chuỗi rỗng hoặc giá trị mặc định khác
-  // }
-  // const tk = khos.value.find((i) => i.id === id);
-  // return tk ? tk.diachi : '';
-  const n = 10;
-  for (var i = 0; i < n; i++) {
-    if (khos.value[i].id === id) {
-      return khos.value[i].tenkho;
-    }
   }
 };
 
@@ -216,7 +211,7 @@ const formatMoney = (money) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, i) in searchProduct" :key="i">
+            <tr v-for="(item, i) in products" :key="i">
               <td
                 class="text-left text-name-product"
                 style="

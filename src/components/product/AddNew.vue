@@ -357,11 +357,7 @@ const schema = yup.object({
     .string()
     .required('Số lượng sản phẩm là bắt buộc')
     .min(1, 'Số lượng không được nhỏ hơn 0'),
-  mota: yup
-    .string()
-    .required('Mô tả là bắt buộc')
-    .min(10, 'Mô tả tối thiểu là 10 kí tự!')
-    .max(500, 'Mô tả tối đa 500 kí tự!'),
+  mota: yup.string().required('Mô tả là bắt buộc').max(500, 'Mô tả tối đa 500 kí tự!'),
   chatlieu: yup.string().required('Chất liệu là bắt buộc'),
   macsac: yup.string().required('Màu sắc là bắt buộc'),
   baohanh: yup.string().required('Bảo hành là bắt buộc'),
