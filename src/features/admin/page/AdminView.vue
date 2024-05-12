@@ -191,6 +191,7 @@
         <kho-layout v-if="option == 5" />
         <nhacungcap-layout v-if="option == 6" />
         <donhang-layout v-if="option == 7" />
+        <phieumuahang-layout v-if="option == 8" />
         <congnocuakhachhang-layout v-if="option == 10" />
         <!-- <main-layout v-if="showProductList" />
         <secondary-layout v-else /> -->
@@ -217,6 +218,7 @@ import NhacungcapLayout from '@/layouts/NhacungcapLayout.vue';
 import DonhangLayout from '@/layouts/DonhangLayout.vue';
 import CongnocuakhachhangLayout from '@/layouts/CongnocuakhachhangLayout.vue';
 import TongquanLayout from '@/layouts/TongquanLayout.vue';
+import PhieumuahangLayout from '@/layouts/PhieumuahangLayout.vue';
 import router from '@/plugins/vue-router';
 import Page403 from './Page403.vue';
 
