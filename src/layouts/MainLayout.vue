@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import AddNew from '../components/product/AddNew.vue';
 import EditProduct from '../components/product/EditProduct.vue';
@@ -123,7 +123,7 @@ const formatMoney = (money) => {
   <component :is="Component" />
   <div class="ml-5 mr-4">
     <v-row>
-      <v-col cols="4" class="mt-4">
+      <v-col class="mt-4">
         <v-text-field
           density="compact"
           variant="solo"
@@ -134,6 +134,21 @@ const formatMoney = (money) => {
           single-line
           hide-details
         ></v-text-field>
+      </v-col>
+      <v-col cols="7" class="mt-4">
+        <v-select
+          density="compact"
+          variant="solo"
+          label="Lọc loại sản phẩm"
+          class="bg-white"
+          single-line
+          hide-details
+          style="
+            border-radius: 6px;
+            border: 1px solid rgb(231, 231, 231);
+            max-width: 220px;
+          "
+        ></v-select>
       </v-col>
       <v-col class="text-right mr-4 mt-3">
         <v-btn

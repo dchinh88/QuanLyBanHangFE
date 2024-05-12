@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { DATE_TIME_FORMAT, DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useUser } from '../layouts/components/user/user.store';

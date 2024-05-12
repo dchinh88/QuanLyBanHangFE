@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { showSuccessNotification } from '@/common/helpers';
