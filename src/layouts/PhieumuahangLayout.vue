@@ -13,6 +13,7 @@ import { serviceChitietdonhang } from '../layouts/components/chitietdonhang/chit
 import { serviceCongnocuakhachhang } from '../layouts/components/congnocuakhachhang/congnocuakhachhang';
 import { serviceChitietphieumuahang } from '../layouts/components/chitietphieumuahang/chitietphieumuahang';
 import { servicePhieumuahang } from '../layouts/components/phieumuahang/phieumuahang';
+import { serviceCongnovoinhacungcap } from '../layouts/components/congnovoinhacungcap/congnovoinhacungcap';
 
 import AddPhieumuahang from '../components/phieumuahang/AddPhieumuahang.vue';
 // import EditKho from '../components/kho/EditKho.vue';
@@ -25,13 +26,8 @@ const dialogAdd = ref(false);
 const dialogEdit = ref(false);
 const dialogDelete = ref(false);
 
-const ctdh = ref([]);
-const cthds = ref([]);
-const cnkh = ref([]);
-
-const idChitietpmh = ref([]);
-
 const chitietphieumuahang = ref([]);
+const congnovoinhacungcap = ref([]);
 
 const phieumuahang = ref([]);
 
@@ -39,8 +35,6 @@ const totalItems = ref('');
 
 const nhacungcap = ref([]);
 
-const donhang = ref([]);
-const khachhang = ref([]);
 const nhanvien = ref([]);
 
 const id = ref(null);
@@ -53,6 +47,7 @@ onMounted(async () => {
   try {
     getAllPhieummuahang();
     getAllChitietphieumuahang();
+    getCongnovoinhacungcap();
     getNhanvien();
     getNhacungcap();
   } catch (error) {
@@ -72,6 +67,11 @@ const getNhacungcap = async () => {
   const res = await serviceNhacungcap.getAllNhacungcap();
   nhacungcap.value = res;
   console.log(nhacungcap.value);
+};
+
+const getCongnovoinhacungcap = async () => {
+  const res = await serviceCongnovoinhacungcap.getAllCongnovoinhacungcap();
+  congnovoinhacungcap.value = res;
 };
 
 const getNhanvien = async () => {
@@ -100,14 +100,14 @@ const getNameNhanvienById = (id) => {
   }
 };
 
-// const getIdCongnocuakhachhang = (id) => {
-//   var lengthCongnno = Object.keys(cnkh.value).length;
-//   for (var i = 0; i < lengthCongnno - 1; i++) {
-//     if (id === cnkh.value[i].donhangid) {
-//       return cnkh.value[i].id;
-//     }
-//   }
-// };
+const getCongnovoinhacungcapById = (id) => {
+  var lengthCongno = Object.keys(congnovoinhacungcap.value).length;
+  for (var i = 0; i < lengthCongno - 1; i++) {
+    if (id === congnovoinhacungcap.value[i].phieumuahangid) {
+      return congnovoinhacungcap.value[i].id;
+    }
+  }
+};
 
 watch(selectedValue, (newVal) => {
   query.limit = newVal;
@@ -170,19 +170,18 @@ const deleteDonhang = async () => {
       console.error('not found!');
       return;
     }
-    // if (getIdChitiethoadon(id.value) && getIdCongnocuakhachhang(id.value)) {
-    //   const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
-    //     getIdChitiethoadon(id.value),
-    //   );
-    //   const deleteCongnoKH = await serviceCongnocuakhachhang.deleteCongnocuaKH(
-    //     getIdCongnocuakhachhang(id.value),
-    //   );
-    //   console.log(deleteCtDonhang);
-    //   console.log(deleteCongnoKH);
-    //   const response = await serviceDonhang.deleteDonhang(id.value);
-    //   console.log(response);
-    // } else
-    if (getIdChitietphieumuahang(id.value)) {
+    if (getIdChitietphieumuahang(id.value) && getCongnovoinhacungcapById(id.value)) {
+      const deleteCtDonhang = await serviceChitietphieumuahang.deleteChitietphieumuahang(
+        getIdChitietphieumuahang(id.value),
+      );
+      const deleteCongnoKH = await serviceCongnovoinhacungcap.deleteCongnovoinhacungcap(
+        getCongnovoinhacungcapById(id.value),
+      );
+      console.log(deleteCtDonhang);
+      console.log(deleteCongnoKH);
+      const response = await serviceDonhang.deleteDonhang(id.value);
+      console.log(response);
+    } else if (getIdChitietphieumuahang(id.value)) {
       const deleteCtPhieumuahang =
         await serviceChitietphieumuahang.deleteChitietphieumuahang(
           getIdChitietphieumuahang(id.value),
@@ -195,14 +194,6 @@ const deleteDonhang = async () => {
       const response = await servicePhieumuahang.deletePhieumuahang(id.value);
       console.log(response);
     }
-    // const deleteCtPhieumuahang =
-    //   await serviceChitietphieumuahang.deleteChitietphieumuahang(
-    //     getIdChitietphieumuahang(id.value),
-    //   );
-    // console.log(deleteCtPhieumuahang);
-
-    // const response = await servicePhieumuahang.deletePhieumuahang(id.value);
-    // console.log(response);
 
     dialogDelete.value = false;
     getAllChitietphieumuahang();
@@ -321,24 +312,12 @@ const formatMoney = (money) => {
                 {{ getSoluongById(item.id) }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ getDongiaById(item.id) }}
+                {{ formatMoney(getDongiaById(item.id)) }}
               </td>
 
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ formatMoney(item.tongtien) }}
               </td>
-              <!-- <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.thanhtien) }}
-              </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.dathanhtoan) }}
-              </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ formatMoney(item.conno) }}
-              </td> -->
-              <!-- <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                <a href="">Xem chi tiết</a>
-              </td> -->
               <td class="text-left">
                 <v-btn
                   icon

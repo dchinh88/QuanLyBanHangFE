@@ -68,6 +68,7 @@
               nhacungcapidField.errorMessage
             }}</span></v-col
           >
+          <!-- {{ nhacungcapidField.value.value   }} -->
         </v-row>
 
         <v-row>
@@ -267,6 +268,7 @@ import { showErrorNotification, showSuccessNotification } from '@/common/helpers
 import { serviceNhacungcap } from '../../layouts/components/nhacungcap/nhacungcap';
 import { servicePhieumuahang } from '../../layouts/components/phieumuahang/phieumuahang';
 import { serviceChitietphieumuahang } from '../../layouts/components/chitietphieumuahang/chitietphieumuahang';
+import { serviceCongnovoinhacungcap } from '../../layouts/components/congnovoinhacungcap/congnovoinhacungcap';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -333,6 +335,18 @@ const dathanhtoanField = useField('dathanhtoan');
 const connoField = useField('conno');
 const hanphaithanhtoanField = useField('hanphaithanhtoan');
 hanphaithanhtoanField.value.value = formatTimeThanhtoan(time);
+const tenNhacungcapField = useField('tennhacungcap');
+// tenNhacungcapField.value.value =
+
+const getNhacungcapById = (id) => {
+  var lengthNhacungcap = Object.keys(nhacungcap.value).length;
+
+  for (var i = 0; i < lengthNhacungcap; i++) {
+    if (id === nhacungcap.value[i].id) {
+      return nhacungcap.value[i].tennhacungcap;
+    }
+  }
+};
 
 const getAllNhacungcap = async () => {
   const res = await serviceNhacungcap.getAllNhacungcap();
@@ -349,6 +363,13 @@ const getAllPhieumuahang = async () => {
 
   var lengthPhieumuahang = Object.keys(phieumuahang.value).length;
   phieumuahangidField.value.value = phieumuahang.value[lengthPhieumuahang - 2].id;
+  for (var i = 0; i < lengthPhieumuahang; i++) {
+    if (getNhacungcapById(phieumuahang.value[i].nhacungcapid)) {
+      tenNhacungcapField.value.value = getNhacungcapById(
+        phieumuahang.value[i].nhacungcapid,
+      );
+    }
+  }
 };
 
 const tinhTongtien = async () => {
@@ -360,6 +381,8 @@ const tinhSono = async () => {
   let sono = await (tongtienField.value.value - dathanhtoanField.value.value);
   return (connoField.value.value = sono);
 };
+
+// const getTenNccById
 
 onMounted(async () => {
   try {
@@ -388,32 +411,33 @@ watch(
   },
 );
 
-// const addCongnocuakhachhang = handleSubmit(async () => {
-//   try {
-//     const formData = new FormData();
-//     formData.append('donhangid', iddonhangField.value.value + 1);
-//     formData.append('hoten', hotenField.value.value);
-//     formData.append('tongtienphaithanhtoa', tienphaithanhtoanField.value.value);
-//     formData.append('sotiendathanhtoan', dathanhtoanField.value.value);
-//     formData.append('sotienconno', tienconnoField.value.value);
-//     formData.append('hanthanhtoan', hanphaithanhtoanField.value.value);
+const addCongnovoinhacungcap = handleSubmit(async () => {
+  try {
+    const formData = new FormData();
+    formData.append('phieumuahangid', phieumuahangidField.value.value + 1);
+    formData.append('tennhacungcap', tenNhacungcapField.value.value);
+    formData.append('tongtienphaithanhtoa', tongtienField.value.value);
+    formData.append('sotiendathanhtoan', dathanhtoanField.value.value);
+    formData.append('sotienconno', connoField.value.value);
+    formData.append('hanthanhtoan', hanphaithanhtoanField.value.value);
 
-//     const response = await serviceCongnocuakhachhang.addCongnocuaKH(formData);
-//     console.log(response);
-//     if (response.success) {
-//       iddonhangField.value.value = '';
-//       hotenField.value.value = '';
-//       tienphaithanhtoanField.value.value = '';
-//       // tiendathanhtoanField.value.value = '';
-//       tienconnoField.value.value = '';
-//       hanphaithanhtoanField.value.value = '';
-//     }
-//   } catch (error) {
-//     console.error('Error: ', error);
-//   }
-// });
+    const response = await serviceCongnovoinhacungcap.addCongnovoinhacungcap(formData);
+    console.log(response);
+    if (response.success) {
+      phieumuahangidField.value.value = '';
+      tenNhacungcapField.value.value = '';
+      tongtienField.value.value = '';
+      dathanhtoanField.value.value = '';
+      connoField.value.value = '';
+      hanphaithanhtoanField.value.value = '';
+    }
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+});
 
-const addChitietdonhang = handleSubmit(async () => {
+const addChitietphieumuahang = handleSubmit(async () => {
+  /////Lỗi add detail
   try {
     const formData = new FormData();
     formData.append('phieumuahangid', phieumuahangidField.value.value + 1);
@@ -422,6 +446,9 @@ const addChitietdonhang = handleSubmit(async () => {
     formData.append('dongia', dongiaField.value.value);
 
     const response = await serviceChitietphieumuahang.addChitietphieumuahang(formData);
+    if (connoField.value.value > 0) {
+      await addCongnovoinhacungcap();
+    }
     console.log(response);
     if (response.success) {
       phieumuahangidField.value.value = '';
@@ -435,7 +462,7 @@ const addChitietdonhang = handleSubmit(async () => {
   }
 });
 
-const addDonhang = handleSubmit(async () => {
+const addPhieumuahang = handleSubmit(async () => {
   try {
     const formData = new FormData();
     formData.append('nhacungcapid', nhacungcapidField.value.value);
@@ -444,8 +471,9 @@ const addDonhang = handleSubmit(async () => {
     formData.append('tongtien', tongtienField.value.value);
 
     const response = await servicePhieumuahang.addPhieumuahang(formData);
+    await addChitietphieumuahang();
     // if (connoField.value.value > 0) {
-    //   await addCongnocuakhachhang();
+    //   await addCongnovoinhacungcap();
     // }
 
     if (response.success) {
@@ -468,13 +496,9 @@ const addDonhang = handleSubmit(async () => {
 });
 
 const addNewPhieumuahang = async () => {
-  // console.log('bf');
-
-  addDonhang();
-  // console.log('at');
+  addPhieumuahang();
   await getAllPhieumuahang();
-  await addChitietdonhang();
-  // await addCongnocuakhachhang();
+  // await addChitietphieumuahang();
 };
 </script>
     
