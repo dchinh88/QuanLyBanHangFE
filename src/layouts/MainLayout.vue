@@ -1,8 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import AddNew from '../components/product/AddNew.vue';
 import EditProduct from '../components/product/EditProduct.vue';
 import { serviceProduct } from '../layouts/components/product/product';
+import { serviceLoaisanpham } from '../layouts/components/loaisanpham/loaisanpham';
 import numeral from 'numeral';
 import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { useProduct } from '../layouts/components/product/product.store';
@@ -26,6 +27,11 @@ const products = ref([]);
 const khos = ref([]);
 const id = ref(null);
 const search = ref('');
+const loaisanpham = ref([]);
+const loaisanphams = ref([]);
+
+const fillterProduct = ref([]);
+const idCategory = ref(0);
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
@@ -34,6 +40,8 @@ onMounted(async () => {
   try {
     getAllProduct();
     GetAllKho();
+    getAllLoaisanpham();
+    // changeLoaisanpham();
   } catch (error) {
     console.log(error);
   }
@@ -51,10 +59,15 @@ const getAllProduct = async () => {
   lengthPage.value = Math.ceil(res.totalItems / selectedValue.value);
   totalItems.value = res?.totalItems;
 };
+const getAllLoaisanpham = async () => {
+  const res = await serviceLoaisanpham.getAllLoaisanpham();
+  loaisanpham.value = res;
+  var lengthLoaisanpham = Object.keys(loaisanpham.value).length;
+  for (var i = 0; i < lengthLoaisanpham - 1; i++) {
+    loaisanphams.value.push(loaisanpham.value[i]);
+  }
 
-const getProductByName = async (name) => {
-  const productList = await serviceProduct.getProductByName(name);
-  products.value = productList;
+  // console.log(loaisanpham.value);
 };
 
 watch(selectedValue, (newVal) => {
@@ -86,6 +99,30 @@ watch(
   },
 );
 
+const getProductByName = async (name) => {
+  const productList = await serviceProduct.getProductByName(name);
+  products.value = productList;
+};
+
+const changeLoaisanpham = async (id) => {
+  const res = await serviceProduct.getProductByCategory(id);
+  products.value = res;
+  // console.log('ahah');
+
+  console.log(idCategory.value);
+
+  // console.log(fillterProduct.value);
+};
+
+watch(
+  () => idCategory.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await changeLoaisanpham(newVal);
+    }
+  },
+);
+
 const closeDialogEdit = () => {
   dialogEdit.value = false;
 };
@@ -108,6 +145,8 @@ const deleteProduct = async () => {
     id.value = null;
   }
 };
+
+const fillterProductByLoaisanpham = async () => {};
 
 const formatMoney = (money) => {
   return numeral(money).format('0,0') + ' ₫';
@@ -142,6 +181,11 @@ const formatMoney = (money) => {
           label="Lọc loại sản phẩm"
           class="bg-white"
           single-line
+          :items="loaisanphams"
+          item-value="id"
+          item-title="tenloaisanpham"
+          v-model="idCategory"
+          @change="changeLoaisanpham(idCategory)"
           hide-details
           style="
             border-radius: 6px;
