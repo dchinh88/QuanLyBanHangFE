@@ -182,19 +182,35 @@
               Số lượng
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
+            <!-- <v-btn>add</v-btn> -->
+            <v-row class="mt-2">
+              <v-btn
+                class="mt-1"
+                @click="handlerGiamsoluong(soluongField.value.value)"
+                flat
+                >-</v-btn
+              >
+              <v-text-field
+                density="compact"
+                variant="solo"
+                type="number"
+                label="Nhập số lượng sản phẩm"
+                single-line
+                readonly
+                class="bg-white"
+                v-model="soluongField.value.value"
+                flat
+                hide-details
+                style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              ></v-text-field>
+              <v-btn
+                class="mt-1"
+                @click="handlerTangsoluong(soluongField.value.value)"
+                flat
+                >+</v-btn
+              >
+            </v-row>
 
-            <v-text-field
-              density="compact"
-              variant="solo"
-              type="number"
-              label="Nhập số lượng sản phẩm"
-              single-line
-              class="bg-white"
-              v-model="soluongField.value.value"
-              flat
-              hide-details
-              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
-            ></v-text-field>
             <span class="error-message mt-1" style="position: absolute; right: 51%">{{
               soluongField.errorMessage
             }}</span>
@@ -336,6 +352,8 @@ const sanpham = ref([]);
 const sanphams = ref([]);
 const sp = ref({});
 
+const slt = ref({});
+
 const kh = ref([]);
 
 const schema = yup.object({
@@ -413,6 +431,7 @@ const diachikhachhangField = useField('diachikh');
 const donhangidField = useField('donhangid');
 const sanphamidField = useField('sanphamid');
 const soluongField = useField('soluong');
+soluongField.value.value = 0;
 const dongiaField = useField('dongia');
 // formatMoney(dongiaField.value.value);
 
@@ -430,34 +449,11 @@ hanphaithanhtoanField.value.value = formatTimeThanhtoan(time);
 
 const getKhachhangByPhone = async () => {
   const res = await serviceKhachhang.getKhachhangByPhone(dienthoaikhField.value.value);
-  // if (res.success) {
-  //   khachhang.value = res;
-  //   // console.log(khachhang.value);
-  //   khachhangidField.value.value = khachhang.value.id;
-  //   hotenField.value.value = hotenkhachhangField.value.value = khachhang.value.hoten;
-  //   diachigiaohangField.value.value = diachikhachhangField.value.value =
-  //     khachhang.value.diachi;
-  //   // console.log(hotenkhachhangField.value.value);
-  // } else {
-  //   await addKhachhangWhenNotExists();
-  //   const res = await serviceKhachhang.getAllKhachhang();
-  //   kh.value = res;
-  //   var lengthKhachhang = Object.keys(kh.value).length;
-  //   // for(var i=0;i<lengthKhachhang-1;i++) {
-  //   khachhangidField.value.value = kh.value[lengthKhachhang - 1].id;
-  //   hotenField.value.value = hotenkhachhangField.value.value =
-  //     kh.value[lengthKhachhang - 1].hoten;
-  //   diachigiaohangField.value.value = diachikhachhangField.value.value =
-  //     kh.value[lengthKhachhang - 1].diachi;
-  //   // }
-  // }
   khachhang.value = res;
-  // console.log(khachhang.value);
   khachhangidField.value.value = khachhang.value.id;
   hotenField.value.value = hotenkhachhangField.value.value = khachhang.value.hoten;
   diachigiaohangField.value.value = diachikhachhangField.value.value =
     khachhang.value.diachi;
-  // console.log(hotenkhachhangField.value.value);
   console.log(res.success);
 };
 
@@ -495,7 +491,7 @@ const getAllSanpham = async () => {
 const getSanphamById = async () => {
   const res = await serviceProduct.getProductDetail(sanphamidField.value.value);
   sp.value = res;
-  console.log(sp.value.giaban);
+  // console.log(sp.value.giaban);
 
   dongiaField.value.value = sp.value.giaban;
   // return formatMoney(dongiaField.value.value);
@@ -545,7 +541,8 @@ watch(
   async (newVal, oldVal) => {
     if (newVal !== oldVal) {
       await getSanphamById();
-      console.log(sanphamidField.value.value);
+      soluongField.value.value = 0;
+      // console.log(sanphamidField.value.value);
     }
   },
 );
@@ -563,9 +560,53 @@ watch(
   },
 );
 
-// const dienthoaikhField = useField('dienthoaikh');
-// const hotenkhachhangField = useField('hotenkh');
-// const diachikhachhangField = useField('diachikh');
+const handlerGiamsoluong = (soluong) => {
+  if (soluong < 1) {
+    return (soluongField.value.value = soluong);
+  }
+  return (soluongField.value.value -= 1);
+};
+
+// const getSoluongton = async () => {
+
+// }
+
+const handlerTangsoluong = async (soluong) => {
+  // getSanphamById();
+  const res = await serviceProduct.getProductDetail(sanphamidField.value.value);
+  slt.value = res;
+  // console.log(res);
+
+  console.log(slt.value.soluongton);
+  console.log(slt.value.tensanpham);
+  console.log(slt.value.chatlieu);
+
+  if (soluong === slt.value.soluongton) {
+    return (soluongField.value.value = soluong);
+  }
+  return (soluongField.value.value += 1);
+};
+
+const updateSoluongton = async () => {
+  try {
+    slt.value.soluongton = slt.value.soluongton - soluongField.value.value;
+    const formData = new FormData();
+    formData.append('id', slt.value.id);
+    formData.append('loaisanphamid', slt.value.loaisanphamid);
+    formData.append('tensanpham', slt.value.tensanpham);
+    formData.append('giaban', slt.value.giaban);
+    formData.append('chatlieu', slt.value.chatlieu);
+    formData.append('macsac', slt.value.macsac);
+    formData.append('baohanh', slt.value.baohanh);
+    formData.append('mota', slt.value.mota);
+    formData.append('khoid', slt.value.khoid);
+    formData.append('soluongton', slt.value.soluongton);
+    const response = await serviceProduct.editProduct(slt.value.id, formData);
+    console.log(response);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+};
 const addKhachhangWhenNotExists = handleSubmit(async () => {
   try {
     const formData = new FormData();
@@ -584,12 +625,6 @@ const addKhachhangWhenNotExists = handleSubmit(async () => {
     console.error('Error: ', error);
   }
 });
-
-// const iddonhangField = useField('iddonhang');
-// const hotenField = useField('hoten');
-// const tienphaithanhtoanField = useField('tienphaithanhtoan');
-// const tienconnoField = useField('tienconno');
-// const hanphaithanhtoanField = useField('hanphaithanhtoan');
 const addCongnocuakhachhang = handleSubmit(async () => {
   try {
     const formData = new FormData();
@@ -624,6 +659,7 @@ const addChitietdonhang = handleSubmit(async () => {
     formData.append('dongia', dongiaField.value.value);
 
     const response = await serviceChitietdonhang.addChitietdonhang(formData);
+    await updateSoluongton();
     console.log(response);
     if (response.success) {
       donhangidField.value.value = '';
