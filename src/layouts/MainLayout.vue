@@ -31,7 +31,7 @@ const loaisanpham = ref([]);
 const loaisanphams = ref([]);
 
 const fillterProduct = ref([]);
-const idCategory = ref(0);
+const idCategory = ref();
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
