@@ -123,7 +123,7 @@ const deleteLoaisanpham = async () => {
           <tbody>
             <tr v-for="(item, i) in searchLoaisanpham" :key="i">
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                {{ i }}
+                {{ ++i }}
               </td>
               <td
                 class="text-name-user"

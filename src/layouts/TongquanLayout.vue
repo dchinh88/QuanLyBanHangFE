@@ -8,8 +8,10 @@ import { serviceKhachhang } from './components/khachhang/khachhang';
 import { serviceKho } from './components/kho/kho';
 import { serviceNhacungcap } from './components/nhacungcap/nhacungcap';
 import { serviceDonhang } from './components/donhang/donhang';
+import { servicePhieumuahang } from './components/phieumuahang/phieumuahang';
 
 import { serviceCongnocuakhachhang } from './components/congnocuakhachhang/congnocuakhachhang';
+import { serviceCongnovoinhacungcap } from './components/congnovoinhacungcap/congnovoinhacungcap';
 
 const loaisanpham = ref([]);
 const tongsoLoaisanpham = ref(0);
@@ -23,6 +25,9 @@ const tongsoNhanvien = ref(0);
 const khachhang = ref([]);
 const tongsoKhachhang = ref(0);
 
+const phieumuahang = ref([]);
+const tongsoPhieumuahang = ref(0);
+
 const kho = ref([]);
 const tongsoKho = ref(0);
 
@@ -35,6 +40,9 @@ const tongsoDonhang = ref(0);
 const congnocuakhachhang = ref([]);
 const tongcono = ref(0);
 
+const congnovoinhacungcap = ref([]);
+const tongcongno = ref(0);
+
 onMounted(async () => {
   try {
     getAllLoaisanpham();
@@ -45,6 +53,8 @@ onMounted(async () => {
     getAllNhacungcap();
     getAllDonhang();
     getAllCongnocuakhachhang();
+    getAllPhieumuahang();
+    getAllCongnovoinhacungcap();
   } catch (error) {
     console.log(error);
   }
@@ -92,12 +102,27 @@ const getAllDonhang = async () => {
   tongsoDonhang.value = Object.keys(donhang.value).length - 1;
 };
 
+const getAllPhieumuahang = async () => {
+  const res = await servicePhieumuahang.getAllPhieumuahang();
+  phieumuahang.value = res;
+  tongsoPhieumuahang.value = Object.keys(phieumuahang.value).length - 1;
+};
+
 const getAllCongnocuakhachhang = async () => {
   const res = await serviceCongnocuakhachhang.getAllCongnocuaKH();
   congnocuakhachhang.value = res;
   const lengthCongno = Object.keys(congnocuakhachhang.value).length - 1;
   for (var i = 0; i < lengthCongno; i++) {
     tongcono.value += congnocuakhachhang.value[i].sotienconno;
+  }
+};
+
+const getAllCongnovoinhacungcap = async () => {
+  const res = await serviceCongnovoinhacungcap.getAllCongnovoinhacungcap();
+  congnovoinhacungcap.value = res;
+  const lengthCongno = Object.keys(congnovoinhacungcap.value).length - 1;
+  for (var i = 0; i < lengthCongno; i++) {
+    tongcongno.value += congnovoinhacungcap.value[i].sotienconno;
   }
 };
 
@@ -195,7 +220,9 @@ const formatMoney = (money) => {
           <template v-slot:append>
             <v-icon color="success" icon="mdi mdi-card-bulleted-outline"></v-icon>
           </template>
-          <v-card-text class="text-price-user text-success">{{}}</v-card-text>
+          <v-card-text class="text-price-user text-success">{{
+            tongsoPhieumuahang
+          }}</v-card-text>
         </v-card>
       </v-col>
 
@@ -204,7 +231,9 @@ const formatMoney = (money) => {
           <template v-slot:append>
             <v-icon color="success" icon="mdi mdi-account-group"></v-icon>
           </template>
-          <v-card-text class="text-price-user text-success">{{}}</v-card-text>
+          <v-card-text class="text-price-user text-success">{{
+            formatMoney(tongcongno)
+          }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>

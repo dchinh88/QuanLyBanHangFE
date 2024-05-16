@@ -112,7 +112,7 @@ const formatTime = (time) => {
           hide-details
         ></v-text-field>
       </v-col>
-      <v-col class="text-right mr-4 mt-3">
+      <!-- <v-col class="text-right mr-4 mt-3">
         <v-btn
           class="text-capitalize text-button"
           color="#0F60FF"
@@ -123,7 +123,7 @@ const formatTime = (time) => {
           + Tạo
           <p class="text-lowercase">mới</p>
         </v-btn>
-      </v-col>
+      </v-col> -->
     </v-row>
 
     <v-row class="mr-2">
