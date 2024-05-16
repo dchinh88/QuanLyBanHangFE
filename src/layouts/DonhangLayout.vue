@@ -9,10 +9,12 @@ import { useKhachhang } from './components/khachhang/khachhang.store';
 import { serviceKhachhang } from './components/khachhang/khachhang';
 // import { serviceNhanvien } from './components/nhanvien/nhanvien';
 import { serviceUser } from '../layouts/components/user/user';
+import { serviceProduct } from '../layouts/components/product/product';
 import { serviceChitietdonhang } from '../layouts/components/chitietdonhang/chitietdonhang';
 import { serviceCongnocuakhachhang } from '../layouts/components/congnocuakhachhang/congnocuakhachhang';
 
 import AddDonhang from '../components/donhang/AddDonhang.vue';
+import { getIn } from 'yup';
 // import EditKho from '../components/kho/EditKho.vue';
 
 const { fetchDonhang, query } = useDonhang();
@@ -28,6 +30,9 @@ const idDonhang = ref('');
 const ctdh = ref([]);
 const cthds = ref([]);
 const cnkh = ref([]);
+
+const infochitietdh = ref({});
+const infoProduct = ref({});
 
 const totalItems = ref('');
 
@@ -112,6 +117,19 @@ const getIdCongnocuakhachhang = (id) => {
   }
 };
 
+const getInfoChitietdh = async (id) => {
+  const res = await serviceChitietdonhang.getDetailChitietdonhang(id);
+  infochitietdh.value = res;
+  console.log('da di qua 1');
+  console.log(infochitietdh.value.sanphamid);
+};
+
+const getProductByIdChitietHD = async (id) => {
+  const res = await serviceProduct.getProductDetail(id);
+  infoProduct.value = res;
+  console.log('da di qua 2');
+};
+
 watch(selectedValue, (newVal) => {
   query.limit = newVal;
   query.page = 1;
@@ -127,15 +145,9 @@ const getAllChitietdonhang = async () => {
   try {
     const response = await serviceChitietdonhang.getAllChitietdonhang();
     ctdh.value = response;
-    // console.log(ctdh.value[0].donhangid);
   } catch (error) {
     console.error('Error: ', error);
   }
-  // var lengCTDonhang = Object.keys(ctdh.value).length;
-  // var lengthCongnno = Object.keys(cnkh.value).length;
-
-  // console.log(lengCTDonhang);
-  // console.log(lengthCongnno);
 };
 
 const getAllCongnocuakhachhang = async () => {
@@ -148,6 +160,31 @@ const getAllCongnocuakhachhang = async () => {
   }
 };
 
+const updateSoluongton = async () => {
+  try {
+    await getInfoChitietdh(getIdChitiethoadon(id.value));
+    await getProductByIdChitietHD(infochitietdh.value.sanphamid);
+    // slt.value.soluongton = slt.value.soluongton - soluongField.value.value;
+    infoProduct.value.soluongton =
+      infoProduct.value.soluongton + infochitietdh.value.soluong;
+    const formData = new FormData();
+    formData.append('id', infoProduct.value.id);
+    formData.append('loaisanphamid', infoProduct.value.loaisanphamid);
+    formData.append('tensanpham', infoProduct.value.tensanpham);
+    formData.append('giaban', infoProduct.value.giaban);
+    formData.append('chatlieu', infoProduct.value.chatlieu);
+    formData.append('macsac', infoProduct.value.macsac);
+    formData.append('baohanh', infoProduct.value.baohanh);
+    formData.append('mota', infoProduct.value.mota);
+    formData.append('khoid', infoProduct.value.khoid);
+    formData.append('soluongton', infoProduct.value.soluongton);
+    const response = await serviceProduct.editProduct(infoProduct.value.id, formData);
+    console.log(response);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+};
+
 const deleteDonhang = async () => {
   try {
     if (!id.value) {
@@ -155,6 +192,7 @@ const deleteDonhang = async () => {
       return;
     }
     if (getIdChitiethoadon(id.value) && getIdCongnocuakhachhang(id.value)) {
+      await updateSoluongton();
       const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
         getIdChitiethoadon(id.value),
       );
@@ -166,6 +204,7 @@ const deleteDonhang = async () => {
       const response = await serviceDonhang.deleteDonhang(id.value);
       console.log(response);
     } else if (getIdChitiethoadon(id.value)) {
+      await updateSoluongton();
       const deleteCtDonhang = await serviceChitietdonhang.deleteChitietdonhang(
         getIdChitiethoadon(id.value),
       );
