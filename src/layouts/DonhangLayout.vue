@@ -14,6 +14,7 @@ import { serviceChitietdonhang } from '../layouts/components/chitietdonhang/chit
 import { serviceCongnocuakhachhang } from '../layouts/components/congnocuakhachhang/congnocuakhachhang';
 
 import AddDonhang from '../components/donhang/AddDonhang.vue';
+import DetailDonhang from '../components/donhang/DetailDonhang.vue';
 import { getIn } from 'yup';
 // import EditKho from '../components/kho/EditKho.vue';
 
@@ -24,17 +25,24 @@ const page = ref(1);
 const dialogAdd = ref(false);
 const dialogEdit = ref(false);
 const dialogDelete = ref(false);
+const dialogDetail = ref(false);
 
-const currentDonhang = ref('');
-const idDonhang = ref('');
+// const currentDonhang = ref('');
+// const idDonhang = ref('');
 const ctdh = ref([]);
-const cthds = ref([]);
+// const cthds = ref([]);
 const cnkh = ref([]);
+
+// const idDetail = ref(null);
 
 const infochitietdh = ref({});
 const infoProduct = ref({});
 
 const totalItems = ref('');
+
+const infoDonhang = ref({});
+const infoChitietdonhang = ref({});
+const listProduct = ref([]);
 
 const donhang = ref([]);
 const khachhang = ref([]);
@@ -53,6 +61,7 @@ onMounted(async () => {
     getNhanvien();
     getAllChitietdonhang();
     getAllCongnocuakhachhang();
+    getAllProduct();
   } catch (error) {
     console.log(error);
   }
@@ -81,7 +90,6 @@ const getNhanvien = async () => {
 
 const getNameKhachhangById = (id) => {
   var lengthKhachhang = Object.keys(khachhang.value).length;
-
   for (var i = 0; i < lengthKhachhang; i++) {
     if (id === khachhang.value[i].id) {
       return khachhang.value[i].hoten;
@@ -113,6 +121,20 @@ const getIdCongnocuakhachhang = (id) => {
   for (var i = 0; i < lengthCongnno - 1; i++) {
     if (id === cnkh.value[i].donhangid) {
       return cnkh.value[i].id;
+    }
+  }
+};
+const getAllProduct = async () => {
+  const res = await serviceProduct.getAllProduct();
+  listProduct.value = res;
+};
+
+const getNameProductById = (id) => {
+  var lengthProduct = Object.keys(listProduct.value).length;
+  for (var i = 0; i < lengthProduct - 1; i++) {
+    if (id === listProduct.value[i].id) {
+      // console.log(listProduct.value[i].tensanpham);
+      return listProduct.value[i].tensanpham;
     }
   }
 };
@@ -242,6 +264,16 @@ const formatMoney = (money) => {
   return numeral(money).format('0,0') + ' ₫';
 };
 
+const getDonhangById = async (i) => {
+  dialogDetail.value = true;
+  const res = await serviceDonhang.getDetailDonhang(i);
+  infoDonhang.value = res;
+  const res1 = await serviceChitietdonhang.getDetailChitietdonhang(
+    getIdChitiethoadon(infoDonhang.value.id),
+  );
+  infoChitietdonhang.value = res1;
+};
+
 const getTinhtrang = (id) => {
   if (id == 1) {
     return 'Chờ Xác Nhận';
@@ -303,7 +335,7 @@ const getTinhtrang = (id) => {
               <th style="height: 47px" class="text-table text-uppercase">
                 Nhân viên tạo đơn
               </th>
-              <th style="height: 47px" class="text-table text-uppercase">Tình trạng</th>
+              <!-- <th style="height: 47px" class="text-table text-uppercase">Tình trạng</th> -->
               <th style="height: 47px" class="text-table text-uppercase">Thành tiền</th>
               <th style="height: 47px" class="text-table text-uppercase">
                 Đã thanh toán
@@ -342,9 +374,9 @@ const getTinhtrang = (id) => {
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ getNameNhanvienById(item.nhanvienid) }}
               </td>
-              <td style="padding: 18px 0 18px 18px" class="text-price-user">
+              <!-- <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ getTinhtrang(item.tinhtrangid) }}
-              </td>
+              </td> -->
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
                 {{ formatMoney(item.thanhtien) }}
               </td>
@@ -355,7 +387,18 @@ const getTinhtrang = (id) => {
                 {{ formatMoney(item.conno) }}
               </td>
               <td style="padding: 18px 0 18px 18px" class="text-price-user">
-                <a href="">Xem chi tiết</a>
+                <!-- <a
+                  href=""
+                  class="text-decoration-none"
+                  @click="(dialogDetail = true), (idDetail = item.id)"
+                  >Xem chi tiết</a
+                > -->
+                <v-btn
+                  @click="getDonhangById(item.id)"
+                  class="text-caption"
+                  variant="text"
+                  >Xem chi tiết</v-btn
+                >
               </td>
               <td class="text-left">
                 <!-- <v-btn
@@ -426,6 +469,12 @@ const getTinhtrang = (id) => {
       @updateData="getAllDonhang()"
     />
 
+    <!-- <detail-donhang
+      :dialogDetail="dialogDetail"
+      @close="dialogDetail = false"
+      :idDetail="idDetail"
+    /> -->
+
     <!-- <edit-kho
       :dialogEdit="dialogEdit"
       :currentKho="currentKho"
@@ -453,6 +502,254 @@ const getTinhtrang = (id) => {
           </v-col>
         </v-row>
       </v-alert>
+    </v-card>
+  </v-dialog>
+
+  <v-dialog max-width="1050px" v-model="dialogDetail">
+    <v-card class="text-table" title="Chi tiết đơn hàng">
+      <div style="background-color: #f7f7f7; padding: 16px 20px 20px">
+        <v-row>
+          <!-- style="padding: 12px" -->
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Ngày tạo đơn
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ formatTime(infoDonhang.ngaytaodon) }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Tên khách hàng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ infoDonhang.khachhangid }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Địa chỉ giao hàng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              readonly
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ infoDonhang.diachigiaohang }}</v-text-field
+            ></v-col
+          >
+        </v-row>
+        <!-- jj----------------------------------------------------------------------- -->
+        <v-row>
+          <!-- style="padding: 12px" -->
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Nhân viên tạo đơn hàng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ getNameNhanvienById(infoDonhang.nhanvienid) }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Tên sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ getNameProductById(infoChitietdonhang.sanphamid) }}</v-text-field
+            ></v-col
+          >
+          <!-- <v-col>
+            <div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Tình trạng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              readonly
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ getTinhtrang(infoDonhang.tinhtrangid) }}</v-text-field
+            >
+          </v-col> -->
+        </v-row>
+        <!-- kk--------------------------------------------------------------------- -->
+        <v-row>
+          <!-- style="padding: 12px" -->
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Số lượng
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ infoChitietdonhang.soluong }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Đơn giá
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ formatMoney(infoChitietdonhang.dongia) }}</v-text-field
+            ></v-col
+          >
+        </v-row>
+        <!-- ll------------------------------------------------------------------------------------ -->
+        <v-row>
+          <!-- style="padding: 12px" -->
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Thành tiền
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ formatMoney(infoDonhang.thanhtien) }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              style="color: #464f60"
+              class="font-weight-bold font-weight-medium text-medium-emphasis d-flex align-center text-name mb-2"
+            >
+              Đã thanh toán
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+            <v-text-field
+              readonly
+              density="compact"
+              variant="solo"
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ formatMoney(infoDonhang.dathanhtoan) }}</v-text-field
+            ></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Còn nợ
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              readonly
+              single-line
+              class="bg-white"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+              >{{ formatMoney(infoDonhang.conno) }}</v-text-field
+            ></v-col
+          >
+        </v-row>
+      </div>
+      <v-row align="center">
+        <!-- <v-col></v-col> -->
+        <v-col class="text-right mr-5"
+          ><v-btn class="mb-5 mt-5" @click="dialogDetail = false">Close</v-btn></v-col
+        >
+      </v-row>
     </v-card>
   </v-dialog>
 </template>
@@ -505,5 +802,21 @@ const getTinhtrang = (id) => {
   font-weight: 400;
   font-size: 15px;
   line-height: 22px;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@500&display=swap');
+.title-addnew {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+.text-name {
+  font-family: 'Public Sans', sans-serif;
+  font-size: 14px;
+}
+.error-message {
+  float: right;
+  font-size: 12px;
+  color: red;
 }
 </style>
