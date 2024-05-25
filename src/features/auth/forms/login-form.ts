@@ -51,7 +51,7 @@ export const useLoginForm = () => {
 
     if (res.success) {
       const ROLE = localStorage.getItem('ROLE')
-      if (ROLE === 'admin') {
+      if (ROLE === 'admin' || ROLE === 'staff') {
         showSuccessNotification(t('auth.success.login'));
         router.push('/admin');
       } else {

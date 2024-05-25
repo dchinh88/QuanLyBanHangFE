@@ -9,6 +9,7 @@ import AddUser from '../components/user/AddUser.vue';
 import AddAvatarUser from '../components/user/AddAvatarUser.vue';
 import { showSuccessNotification } from '@/common/helpers';
 import avatar_define from '@/assets/images/avatar_mac_dinh.jpg';
+import Page403 from '@/features/admin/page/Page403.vue';
 
 const { fetchUser, query } = useUser();
 
@@ -30,6 +31,7 @@ const search = ref('');
 const avatar = ref([]);
 const image = 'data:image/jpeg;base64, ';
 // const lengthAvatar = ref(0);
+const ROLE = localStorage.getItem('ROLE');
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
@@ -120,7 +122,7 @@ const deleteUser = async () => {
 
 <template>
   <component :is="Component" />
-  <div class="ml-5 mr-4">
+  <div class="ml-5 mr-4" v-if="ROLE === 'admin'">
     <v-row>
       <v-col cols="4" class="mt-4">
         <v-text-field
@@ -323,6 +325,9 @@ const deleteUser = async () => {
     />
 
     <!-- <h1>haha</h1> -->
+  </div>
+  <div v-else>
+    <page403 />
   </div>
 
   <v-dialog max-width="450px" v-model="dialogDelete">
