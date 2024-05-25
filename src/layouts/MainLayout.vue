@@ -25,6 +25,7 @@ const totalItems = ref('');
 
 const products = ref([]);
 const khos = ref([]);
+const listKho = ref([]);
 const id = ref(null);
 const search = ref('');
 const loaisanpham = ref([]);
@@ -32,6 +33,7 @@ const loaisanphams = ref([]);
 
 const fillterProduct = ref([]);
 const idCategory = ref();
+const idKho = ref();
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
@@ -52,6 +54,10 @@ const GetAllKho = async () => {
   khos.value = res;
   // console.log(typeof khos.value);
   // console.log(khos.value);
+  var lengthKho = Object.keys(khos.value).length;
+  for (var i = 0; i < lengthKho - 1; i++) {
+    listKho.value.push(khos.value[i]);
+  }
 };
 const getAllProduct = async () => {
   const res = await fetchProducts();
@@ -114,11 +120,25 @@ const changeLoaisanpham = async (id) => {
   // console.log(fillterProduct.value);
 };
 
+const changKho = async (id) => {
+  const res = await serviceProduct.getProductByKho(id);
+  products.value = res;
+};
+
 watch(
   () => idCategory.value,
   async (newVal, oldVal) => {
     if (newVal !== oldVal) {
       await changeLoaisanpham(newVal);
+    }
+  },
+);
+
+watch(
+  () => idKho.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await changKho(newVal);
     }
   },
 );
@@ -174,7 +194,7 @@ const formatMoney = (money) => {
           hide-details
         ></v-text-field>
       </v-col>
-      <v-col cols="7" class="mt-4">
+      <v-col cols="2" class="mt-4">
         <v-select
           density="compact"
           variant="solo"
@@ -186,6 +206,26 @@ const formatMoney = (money) => {
           item-title="tenloaisanpham"
           v-model="idCategory"
           @change="changeLoaisanpham(idCategory)"
+          hide-details
+          style="
+            border-radius: 6px;
+            border: 1px solid rgb(231, 231, 231);
+            max-width: 220px;
+          "
+        ></v-select>
+      </v-col>
+      <v-col cols="3" class="mt-4">
+        <v-select
+          density="compact"
+          variant="solo"
+          label="Lọc kho"
+          class="bg-white"
+          single-line
+          :items="listKho"
+          item-value="id"
+          item-title="tenkho"
+          v-model="idKho"
+          @change="changKho(idKho)"
           hide-details
           style="
             border-radius: 6px;

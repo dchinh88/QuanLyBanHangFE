@@ -27,6 +27,10 @@ class ProductService extends ApiService {
     async getProductByCategory(id: number): Promise<IBodyResponse<IGetListResponse<Product>>> {
         return this.client.get(`${this.baseUrl}/idlsp/${id}`);
     }
+
+    async getProductByKho(id: number): Promise<IBodyResponse<IGetListResponse<Product>>> {
+        return this.client.get(`${this.baseUrl}/idkho/${id}`);
+    }
 }
 
 export const serviceProduct = new ProductService({ baseUrl: '/QLSanpham' }, axiosInstance)
