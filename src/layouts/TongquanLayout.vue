@@ -74,8 +74,10 @@ const getAllSanpham = async () => {
 
 const getAllNhanvien = async () => {
   const res = await serviceUser.getAllUser();
-  nhanvien.value = res;
-  tongsoNhanvien.value = Object.keys(nhanvien.value).length - 1;
+  // nhanvien.value = res;
+  // tongsoNhanvien.value = Object.keys(nhanvien.value).length - 1;
+  tongsoNhanvien.value = res.totalItems;
+  // console.log(res.totalItems);
 };
 
 const getAllKhachhang = async () => {
