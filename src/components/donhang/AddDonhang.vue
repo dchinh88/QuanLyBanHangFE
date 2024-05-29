@@ -338,6 +338,7 @@ import { serviceDonhang } from '../../layouts/components/donhang/donhang';
 import { serviceChitietdonhang } from '../../layouts/components/chitietdonhang/chitietdonhang';
 import { serviceCongnocuakhachhang } from '../../layouts/components/congnocuakhachhang/congnocuakhachhang';
 import numeral from 'numeral';
+import { jwtDecode } from 'jwt-decode';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -409,6 +410,19 @@ const formatTimeThanhtoan = (time) => {
   return year + '-' + formatMonth + '-' + formatDay;
 };
 
+const token = localStorage.getItem('ACCESS_TOKEN');
+
+const decodeToken = async (token) => {
+  try {
+    const decode = jwtDecode(token);
+    if (decode) {
+      return decode.sub;
+    }
+  } catch (error) {
+    console.error('Failed to decode token: ', error);
+  }
+};
+
 const IdUser = localStorage.getItem('IDUSER');
 
 const ngaytaodonField = useField('ngaytaodon');
@@ -418,6 +432,7 @@ const diachigiaohangField = useField('diachigiaohang');
 const khachhangidField = useField('khachhangid');
 const nhanvienidField = useField('nhanvienid');
 nhanvienidField.value.value = IdUser;
+// nhanvienidField.value.value = decodeToken(token);
 const tinhtrangidField = useField('tinhtrangid');
 tinhtrangidField.value.value = 1;
 const thanhtienField = useField('thanhtien');
@@ -513,6 +528,7 @@ onMounted(async () => {
   try {
     getAllDonhang();
     getAllSanpham();
+    console.log(decodeToken(token));
   } catch (error) {
     console.log(error);
   }

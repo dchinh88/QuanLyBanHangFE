@@ -17,13 +17,15 @@ export const logout = (redirectToLogin = true) => {
 
 export const sendRefreshToken = async () => {
   let response;
+  // const ref_tk = localStorage.getItem('REFRESH_TOKEN');
 
   try {
     const API_URL = import.meta.env.VUE_APP_API_URL;
     // const API_URL = process.env.VUE_APP_API_URL
     const formData = new FormData()
+    // formData.append("refresh_token", localStorageAuthService.getRefreshToken())
     formData.append("refresh_token", localStorageAuthService.getRefreshToken())
-    response = await axios.post(`${API_URL}/Account/refresh_token`, formData, {
+    response = await axios.post(`${API_URL}/Account/refresh`, formData, {
       // withCredentials: true 
       headers: {
         'Content-Type': 'application/json'
@@ -41,11 +43,18 @@ export const sendRefreshToken = async () => {
       // localStorageAuthService.setAccessTokenExpiredAt(response.data?.data.expiresIn);
       localStorageAuthService.resetAll();
 
-      localStorageAuthService.setAccessToken(response.data?.newAccessToken);
-      localStorageAuthService.setAccessTokenExpiredAt(response.data?.expiresIn);
-      localStorageAuthService.setRefreshToken(response.data?.newRefreshToken);
-      localStorageAuthService.setRefreshTokenExpiredAt(response.data?.refreshExpiresIn)
-      localStorageAuthService.setUserRole(response.data?.roles)
+      // localStorageAuthService.setAccessToken(response.data?.newAccessToken);
+      // localStorageAuthService.setAccessTokenExpiredAt(response.data?.expiresIn);
+      // localStorageAuthService.setRefreshToken(response.data?.newRefreshToken);
+      // localStorageAuthService.setRefreshTokenExpiredAt(response.data?.refreshExpiresIn)
+      // localStorageAuthService.setUserRole(response.data?.roles)
+
+      localStorageAuthService.setAccessToken(response.accessToken.token);
+      localStorageAuthService.setAccessToken(response.accessToken.expires);
+      localStorageAuthService.setUserRole(response.accessToken.role)
+
+      localStorageAuthService.setRefreshToken(response.refreshToken.token)
+      localStorageAuthService.setRefreshTokenExpiredAt(response.refreshToken.expiresIn)
       return;
     }
     logout(true);
