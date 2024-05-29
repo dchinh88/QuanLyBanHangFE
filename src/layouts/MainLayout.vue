@@ -34,9 +34,21 @@ const loaisanphams = ref([]);
 const fillterProduct = ref([]);
 const idCategory = ref();
 const idKho = ref();
+const sort = ref();
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
+
+const arrSort = [
+  {
+    id: 1,
+    value: 'Sắp xếp giá giảm dần',
+  },
+  {
+    id: 2,
+    value: 'Sắp xếp giá tăng dần',
+  },
+];
 
 onMounted(async () => {
   try {
@@ -125,11 +137,38 @@ const changKho = async (id) => {
   products.value = res;
 };
 
+const sortProductByPricDes = async () => {
+  const res = await serviceProduct.sortProductDes();
+  products.value = res;
+};
+
+const sortProductByPriceAcs = async () => {
+  const res = await serviceProduct.sortProductAcs();
+  products.value = res;
+};
+
+const changeSort = async (id) => {
+  if (id === 1) {
+    await sortProductByPricDes();
+  } else if (id === 2) {
+    await sortProductByPriceAcs();
+  }
+};
+
 watch(
   () => idCategory.value,
   async (newVal, oldVal) => {
     if (newVal !== oldVal) {
       await changeLoaisanpham(newVal);
+    }
+  },
+);
+
+watch(
+  () => sort.value,
+  async (newVal, oldVal) => {
+    if (newVal !== oldVal) {
+      await changeSort(newVal);
     }
   },
 );
@@ -166,7 +205,7 @@ const deleteProduct = async () => {
   }
 };
 
-const fillterProductByLoaisanpham = async () => {};
+// const fillterProductByLoaisanpham = async () => {};
 
 const formatMoney = (money) => {
   return numeral(money).format('0,0') + ' ₫';
@@ -214,7 +253,7 @@ const formatMoney = (money) => {
           "
         ></v-select>
       </v-col>
-      <v-col cols="3" class="mt-4">
+      <v-col cols="2" class="mt-4">
         <v-select
           density="compact"
           variant="solo"
@@ -234,6 +273,27 @@ const formatMoney = (money) => {
           "
         ></v-select>
       </v-col>
+      <v-col cols="2" class="mt-4">
+        <v-select
+          density="compact"
+          variant="solo"
+          label="Sắp xếp"
+          class="bg-white"
+          single-line
+          :items="arrSort"
+          item-value="id"
+          item-title="value"
+          v-model="sort"
+          @change="changeSort(sort)"
+          hide-details
+          style="
+            border-radius: 6px;
+            border: 1px solid rgb(231, 231, 231);
+            max-width: 220px;
+          "
+        ></v-select>
+      </v-col>
+      <!-- <v-col></v-col> -->
       <v-col class="text-right mr-4 mt-3">
         <v-btn
           class="text-capitalize text-button"
