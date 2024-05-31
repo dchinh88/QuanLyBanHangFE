@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue';
 import { DEFAULT_LIMIT_FOR_PAGINATION } from '@/common/constants';
 import { showSuccessNotification } from '@/common/helpers';
@@ -54,6 +54,26 @@ const search = ref('');
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
 
+// const
+const startDate = ref();
+const endDate = ref();
+const test = ref([]);
+const test1 = ref([]);
+
+const doanhthu = ref(0);
+
+const formatDate = (date) => {
+  const day = new Date(date).getDate();
+  const month = new Date(date).getMonth() + 1;
+  const year = new Date(date).getFullYear();
+  const formatMonth = month >= 10 ? month : '0' + month;
+  const formatDay = day >= 10 ? day : '0' + day;
+  return year + '-' + formatMonth + '-' + formatDay;
+};
+
+const formatedStartDate = formatDate(startDate.value);
+const formatedEndDate = formatDate(endDate.value);
+
 onMounted(async () => {
   try {
     getAllDonhang();
@@ -72,6 +92,11 @@ const getAllDonhang = async () => {
   donhang.value = res.data;
   lengthPage.value = Math.ceil(res.totalItems / selectedValue.value);
   totalItems.value = res?.totalItems;
+
+  const length = donhang.value.length;
+  for (var i = 0; i < length - 1; i++) {
+    doanhthu.value += donhang.value[i].thanhtien;
+  }
   //   console.log(typeof donhang);
   // console.log(donhang.value.length);
 };
@@ -89,11 +114,15 @@ const getNhanvien = async () => {
 };
 
 const getNameKhachhangById = (id) => {
-  var lengthKhachhang = Object.keys(khachhang.value).length;
-  for (var i = 0; i < lengthKhachhang; i++) {
-    if (id === khachhang.value[i].id) {
-      return khachhang.value[i].hoten;
+  try {
+    var lengthKhachhang = Object.keys(khachhang.value).length;
+    for (var i = 0; i < lengthKhachhang; i++) {
+      if (id === khachhang.value[i].id) {
+        return khachhang.value[i].hoten;
+      }
     }
+  } catch (error) {
+    console.error(error);
   }
 };
 
@@ -274,6 +303,35 @@ const getDonhangById = async (i) => {
   infoChitietdonhang.value = res1;
 };
 
+const filterDonhangByDate = async () => {
+  const res = await serviceDonhang.filterDonhang(startDate.value, endDate.value);
+  test.value = res;
+  var length = Object.keys(test.value).length;
+  doanhthu.value = 0;
+  for (var i = 0; i < length - 1; i++) {
+    test1.value.push(test.value[i]);
+    doanhthu.value += test1.value[i].thanhtien;
+  }
+
+  donhang.value = test1.value;
+
+  test.value = [];
+  test1.value = [];
+  // for(var i=0;i<length-1;i++) {
+
+  // }
+  // console.log(donhang.value);
+};
+
+// watch(
+//   () => endDate.value,
+//   async (newVal, oldVal) => {
+//     if (newVal !== oldVal) {
+//       await filterDonhangByDate();
+//     }
+//   },
+// );
+
 const getTinhtrang = (id) => {
   if (id == 1) {
     return 'Chờ Xác Nhận';
@@ -295,7 +353,7 @@ const getTinhtrang = (id) => {
   <component :is="Component" />
   <div class="ml-5 mr-4">
     <v-row>
-      <v-col cols="4" class="mt-4">
+      <v-col cols="3" class="mt-4">
         <v-text-field
           density="compact"
           variant="solo"
@@ -306,6 +364,31 @@ const getTinhtrang = (id) => {
           single-line
           hide-details
         ></v-text-field>
+      </v-col>
+      <v-col cols="2" class="mt-4">
+        <v-text-field
+          density="compact"
+          variant="solo"
+          label="Chọn ngày bắt đầu"
+          type="date"
+          v-model="startDate"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-col>
+      <v-col cols="2" class="mt-4">
+        <v-text-field
+          density="compact"
+          variant="solo"
+          label="Chọn ngày bắt đầu"
+          type="date"
+          v-model="endDate"
+          single-line
+          hide-details
+        ></v-text-field>
+      </v-col>
+      <v-col cols="2" class="mt-5">
+        <v-btn append-icon="mdi-filter-outline" @click="filterDonhangByDate"> Lọc </v-btn>
       </v-col>
       <v-col class="text-right mr-4 mt-3">
         <v-btn
@@ -417,6 +500,32 @@ const getTinhtrang = (id) => {
                 >
                   <v-icon color="#8B909A" icon="mdi mdi-trash-can-outline"> </v-icon>
                 </v-btn>
+              </td>
+            </tr>
+            <tr>
+              <td
+                class="text-name-user"
+                style="
+                  padding: 18px 0 18px 18px;
+                  white-space: nowrap;
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                Doanh thu:
+              </td>
+              <td
+                class="text-name-user text-red"
+                style="
+                  padding: 18px 0 18px 18px;
+                  white-space: nowrap;
+                  max-width: 150px;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+              >
+                {{ formatMoney(doanhthu) }}
               </td>
             </tr>
           </tbody>

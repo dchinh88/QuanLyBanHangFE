@@ -22,15 +22,20 @@ export const sendRefreshToken = async () => {
   try {
     const API_URL = import.meta.env.VUE_APP_API_URL;
     // const API_URL = process.env.VUE_APP_API_URL
-    const formData = new FormData()
+    // const formData = new FormData()
     // formData.append("refresh_token", localStorageAuthService.getRefreshToken())
-    formData.append("refresh_token", localStorageAuthService.getRefreshToken())
-    response = await axios.post(`${API_URL}/Account/refresh`, formData, {
-      // withCredentials: true 
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    // 
+    // formData.append("refresh_token", localStorageAuthService.getRefreshToken())
+    // response = await axios.post(`${API_URL}/Account/refresh?token=`, formData, {
+    //   // withCredentials: true 
+    //   headers: {
+    //     'Content-Type': 'application/json'
+    //   }
+    // });
+    // 
+    // formData.append("refresh_token", localStorageAuthService.getRefreshToken())
+    const refreshToken = localStorageAuthService.getRefreshToken();
+    response = await axios.post(`${API_URL}/Account/refresh?token=${refreshToken}`,);
     // alert('lay xog refresh token')
 
 

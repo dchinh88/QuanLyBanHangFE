@@ -23,6 +23,10 @@ class DonhangService extends ApiService {
     async getDetailDonhang(id: number): Promise<IBodyResponse<Donhang>> {
         return this.client.get(`${this.baseUrl}/${id}`);
     }
+
+    async filterDonhang(startDate: Date, endDate: Date): Promise<IBodyResponse<IGetListResponse<Donhang>>> {
+        return this.client.get(`${this.baseUrl}/filterByDate?startDate=${startDate}&&endDate=${endDate}`)
+    }
 }
 
 
