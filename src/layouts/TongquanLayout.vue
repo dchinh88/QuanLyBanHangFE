@@ -42,6 +42,8 @@ const tongcono = ref(0);
 
 const congnovoinhacungcap = ref([]);
 const tongcongno = ref(0);
+const doanhthu = ref(0);
+const phinhap = ref(0);
 
 onMounted(async () => {
   try {
@@ -102,12 +104,18 @@ const getAllDonhang = async () => {
   const res = await serviceDonhang.getAllDonhang();
   donhang.value = res;
   tongsoDonhang.value = Object.keys(donhang.value).length - 1;
+  for (var i = 0; i < tongsoDonhang.value; i++) {
+    doanhthu.value += donhang.value[i].thanhtien;
+  }
 };
 
 const getAllPhieumuahang = async () => {
   const res = await servicePhieumuahang.getAllPhieumuahang();
   phieumuahang.value = res;
   tongsoPhieumuahang.value = Object.keys(phieumuahang.value).length - 1;
+  for (var i = 0; i < tongsoPhieumuahang.value; i++) {
+    phinhap.value += phieumuahang.value[i].tongtien;
+  }
 };
 
 const getAllCongnocuakhachhang = async () => {
@@ -253,36 +261,28 @@ const formatMoney = (money) => {
         </v-card>
       </v-col>
 
-      <!-- <v-col cols="12" md="4">
-        <v-card class="mx-auto text-name-user" title="Số phiếu mua hàng">
+      <v-col cols="12" md="4">
+        <v-card class="mx-auto text-name-user" title="Doanh thu">
           <template v-slot:append>
-            <v-icon color="success" icon="mdi mdi-card-bulleted-outline"></v-icon>
+            <v-icon color="success" icon="mdi-currency-usd"></v-icon>
           </template>
-          <v-card-text class="text-price-user text-success">{{}}</v-card-text>
+          <v-card-text class="text-price-user text-success">{{
+            formatMoney(doanhthu)
+          }}</v-card-text>
         </v-card>
       </v-col>
 
       <v-col cols="12" md="4">
-        <v-card class="mx-auto text-name-user" title="Tổng công nợ với nhà cung cấp">
+        <v-card class="mx-auto text-name-user" title="Phí nhập hàng">
           <template v-slot:append>
-            <v-icon color="success" icon="mdi mdi-account-group"></v-icon>
-          </template>
-          <v-card-text class="text-price-user text-success">{{}}</v-card-text>
-        </v-card>
-      </v-col> -->
-    </v-row>
-    <!-- <v-row>
-      <v-col cols="12" md="4">
-        <v-card class="mx-auto text-name-user" title="Tổng công nợ của khách hàng">
-          <template v-slot:append>
-            <v-icon color="success" icon="mdi mdi-account-credit-card-outline"></v-icon>
+            <v-icon color="success" icon="mdi-cash-100"></v-icon>
           </template>
           <v-card-text class="text-price-user text-success">{{
-            formatMoney(tongcono)
+            formatMoney(phinhap)
           }}</v-card-text>
         </v-card>
       </v-col>
-    </v-row> -->
+    </v-row>
   </div>
 </template>
 
