@@ -229,7 +229,7 @@ const drawer = ref(null);
 const showProductList = ref(true);
 const showUserList = ref(false);
 
-const option = ref(2);
+const option = ref(0);
 
 const Profile = ref(false);
 
