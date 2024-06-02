@@ -12,6 +12,7 @@ import { servicePhieumuahang } from './components/phieumuahang/phieumuahang';
 
 import { serviceCongnocuakhachhang } from './components/congnocuakhachhang/congnocuakhachhang';
 import { serviceCongnovoinhacungcap } from './components/congnovoinhacungcap/congnovoinhacungcap';
+import { serviceChitietdonhang } from './components/chitietdonhang/chitietdonhang';
 
 const loaisanpham = ref([]);
 const tongsoLoaisanpham = ref(0);
@@ -45,6 +46,10 @@ const tongcongno = ref(0);
 const doanhthu = ref(0);
 const phinhap = ref(0);
 
+const chitietdonhang = ref([]);
+const chitietdonhangs = ref([]);
+const bestSelleingProduct = ref([]);
+
 onMounted(async () => {
   try {
     getAllLoaisanpham();
@@ -57,6 +62,7 @@ onMounted(async () => {
     getAllCongnocuakhachhang();
     getAllPhieumuahang();
     getAllCongnovoinhacungcap();
+    getTopSellingProducts();
   } catch (error) {
     console.log(error);
   }
@@ -133,6 +139,61 @@ const getAllCongnovoinhacungcap = async () => {
   const lengthCongno = Object.keys(congnovoinhacungcap.value).length - 1;
   for (var i = 0; i < lengthCongno; i++) {
     tongcongno.value += congnovoinhacungcap.value[i].sotienconno;
+  }
+};
+
+// const getBestSellingProduct = async () => {
+//   try {
+//     const res = await serviceChitietdonhang.getAllChitietdonhang();
+//     chitietdonhang.value = res;
+
+//     const productSales = {};
+//     chitietdonhang.value.forEach((item) => {
+//       if (!productSales[item.sanphamid]) {
+//         productSales[item.sanphamid] = 0;
+//       }
+//       productSales[item.sanphamid] += item.soluong;
+//     });
+//   } catch (error) {
+//     console.error('Error: ', error);
+//   }
+// };
+const getTopSellingProducts = async () => {
+  try {
+    // Lấy tất cả chi tiết đơn hàng
+    const res = await serviceChitietdonhang.getAllChitietdonhang();
+    chitietdonhang.value = res;
+
+    // Tính tổng số lượng bán ra của từng sản phẩm
+    const productSales = {};
+    var length = Object.keys(chitietdonhang.value).length;
+    for (var i = 0; i < length - 1; i++) {
+      chitietdonhangs.value.push(chitietdonhang.value[i]);
+    }
+    chitietdonhangs.value.forEach((item) => {
+      if (!productSales[item.sanphamid]) {
+        productSales[item.sanphamid] = 0;
+      }
+      productSales[item.sanphamid] += item.soluong;
+    });
+
+    // Chuyển đổi đối tượng thành mảng và sắp xếp theo tổng số lượng bán ra
+    const sortedProductSales = Object.entries(productSales)
+      .sort(([, salesA], [, salesB]) => salesB - salesA)
+      .slice(0, 5); // Lấy ra 5 sản phẩm có số lượng bán ra cao nhất
+
+    // Lấy thông tin chi tiết của các sản phẩm bán chạy nhất
+    bestSelleingProduct.value = await Promise.all(
+      sortedProductSales.map(async ([productId]) => {
+        const product = await serviceProduct.getProductDetail(productId);
+        return product;
+      }),
+    );
+
+    console.log('Top Selling Products:', bestSelleingProduct.value);
+    return bestSelleingProduct.value;
+  } catch (error) {
+    console.error('Error: ', error);
   }
 };
 
@@ -283,6 +344,66 @@ const formatMoney = (money) => {
         </v-card>
       </v-col>
     </v-row>
+    <v-row align="center" class="text-price-user text-success mt-4 mb-4" dense>
+      Top 5 sản phẩm bán chạy </v-row
+    ><v-table style="border-radius: 12px 12px 0 0">
+      <thead>
+        <tr>
+          <th style="height: 47px" class="text-table text-uppercase">STT</th>
+          <th
+            class="text-table text-uppercase"
+            style="padding: 0 0 0 36px; height: 47px; max-width: 200px"
+          >
+            Tên sản phẩm
+          </th>
+          <th
+            style="height: 47px; max-width: 165px !important"
+            class="text-table text-uppercase"
+          >
+            Giá
+          </th>
+          <th
+            style="height: 47px; max-width: 165px !important"
+            class="text-table text-uppercase"
+          >
+            Chất liệu
+          </th>
+          <th
+            style="height: 47px; max-width: 165px !important"
+            class="text-table text-uppercase"
+          >
+            Màu sắc
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, i) in bestSelleingProduct" :key="i">
+          <td style="padding: 18px 0 18px 18px" class="text-price-product">
+            {{ ++i }}
+          </td>
+          <td
+            class="text-left text-name-product"
+            style="
+              height: 58px;
+              padding: 0 36px 0 36px;
+              max-width: 250px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            "
+          >
+            <!-- white-space: nowrap; -->
+
+            {{ item.tensanpham }}
+          </td>
+
+          <td class="text-left text-price-product" style="max-width: 165px">
+            {{ formatMoney(item.giaban) }}
+          </td>
+          <td class="text-left text-price-product">{{ item.chatlieu }}</td>
+          <td class="text-left text-price-product">{{ item.macsac }}</td>
+        </tr>
+      </tbody>
+    </v-table>
   </div>
 </template>
 
@@ -309,6 +430,19 @@ const formatMoney = (money) => {
   font-size: 13px;
   line-height: 15.28px;
   color: #8b909a !important;
+}
+
+.text-price-product {
+  font-family: 'Public Sans', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 22px;
+}
+.text-name-product {
+  font-family: 'Public Sans', sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 22px;
 }
 .text-button {
   font-family: 'Public Sans', sans-serif;

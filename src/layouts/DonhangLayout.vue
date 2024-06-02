@@ -94,7 +94,7 @@ const getAllDonhang = async () => {
   totalItems.value = res?.totalItems;
 
   const length = donhang.value.length;
-  for (var i = 0; i < length - 1; i++) {
+  for (var i = 0; i < length; i++) {
     doanhthu.value += donhang.value[i].thanhtien;
   }
   //   console.log(typeof donhang);
@@ -250,6 +250,7 @@ const deleteDonhang = async () => {
       const deleteCongnoKH = await serviceCongnocuakhachhang.deleteCongnocuaKH(
         getIdCongnocuakhachhang(id.value),
       );
+      doanhthu.value = 0;
       console.log(deleteCtDonhang);
       console.log(deleteCongnoKH);
       const response = await serviceDonhang.deleteDonhang(id.value);
@@ -263,9 +264,11 @@ const deleteDonhang = async () => {
 
       const response = await serviceDonhang.deleteDonhang(id.value);
       console.log(response);
+      doanhthu.value = 0;
     } else {
       const response = await serviceDonhang.deleteDonhang(id.value);
       console.log(response);
+      doanhthu.value = 0;
     }
 
     dialogDelete.value = false;
