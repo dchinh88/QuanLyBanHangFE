@@ -3,7 +3,7 @@
     <v-dialog
       class="mx-auto pb-6 mt-1"
       style="border-radius: 12px"
-      max-width="748px"
+      max-width="1122px"
       v-model="props.dialogAdd"
     >
       <div
@@ -69,9 +69,65 @@
             }}</span></v-col
           >
           <!-- {{ nhacungcapidField.value.value   }} -->
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Loại sản phẩm
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-select
+              density="compact"
+              variant="solo"
+              label="Chọn loại sản phẩm"
+              single-line
+              :items="loaisanphams"
+              item-value="id"
+              item-title="tenloaisanpham"
+              class="bg-white"
+              v-model="loaisanphamidField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-select>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              nhacungcapidField.errorMessage
+            }}</span></v-col
+          >
         </v-row>
 
+        <!-- <v-row>
+          
+        </v-row> -->
+
         <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Chọn kho
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-select
+              density="compact"
+              variant="solo"
+              label="Chọn kho"
+              single-line
+              :items="khos"
+              item-value="id"
+              item-title="tenkho"
+              class="bg-white"
+              v-model="khoidField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-select>
+            <span class="error-message mt-1" style="position: absolute; right: 3%">{{
+              nhacungcapidField.errorMessage
+            }}</span></v-col
+          >
           <v-col
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
@@ -120,7 +176,31 @@
             }}</span></v-col
           >
         </v-row>
+
         <v-row>
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
+              Chất liệu
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập chất liệu"
+              single-line
+              v-model="chatlieuField.value.value"
+              class="bg-white"
+              hide-details
+              flat
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              chatlieuField.errorMessage
+            }}</span></v-col
+          >
           <v-col
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
@@ -177,6 +257,29 @@
             ><div
               class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
             >
+              Màu sắc
+              <p class="ml-1" style="color: #0f60ff">*</p>
+            </div>
+
+            <v-text-field
+              density="compact"
+              variant="solo"
+              label="Nhập màu sắc"
+              single-line
+              class="bg-white"
+              v-model="mausacField.value.value"
+              flat
+              hide-details
+              style="border-radius: 6px; border: 1px solid rgb(231, 231, 231)"
+            ></v-text-field>
+            <span class="error-message mt-1" style="position: absolute; right: 51%">{{
+              mausacField.errorMessage
+            }}</span></v-col
+          >
+          <v-col
+            ><div
+              class="text-medium-emphasis text-[14px] d-flex align-center font-weight-bold text-name mb-2"
+            >
               Đã thanh toán
               <p class="ml-1" style="color: #0f60ff">*</p>
             </div>
@@ -228,13 +331,13 @@
         style="
           padding-top: 6px;
           background-color: white;
-          width: 748px;
+          width: 1122px;
           margin-left: 0.4px;
           border-radius: 0 0 12px 12px;
         "
       >
-        <v-col cols="8"></v-col>
-        <v-col cols="4"
+        <v-col cols="9"></v-col>
+        <v-col cols="3"
           ><v-btn
             width="70"
             flat
@@ -266,6 +369,9 @@ import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
 import { showErrorNotification, showSuccessNotification } from '@/common/helpers';
 import { serviceNhacungcap } from '../../layouts/components/nhacungcap/nhacungcap';
+import { serviceLoaisanpham } from '../../layouts/components/loaisanpham/loaisanpham';
+import { serviceKho } from '../../layouts/components/kho/kho';
+import { serviceProduct } from '../../layouts/components/product/product';
 import { servicePhieumuahang } from '../../layouts/components/phieumuahang/phieumuahang';
 import { serviceChitietphieumuahang } from '../../layouts/components/chitietphieumuahang/chitietphieumuahang';
 import { serviceCongnovoinhacungcap } from '../../layouts/components/congnovoinhacungcap/congnovoinhacungcap';
@@ -278,6 +384,17 @@ const emits = defineEmits(['close', 'updateData']);
 
 const nhacungcap = ref([]);
 const nhacungcaps = ref([]);
+
+const loaisanpham = ref([]);
+const loaisanphams = ref([]);
+
+const kho = ref([]);
+const khos = ref([]);
+
+const product = ref([]);
+const products = ref([]);
+
+const infoProduct = ref({});
 
 const phieumuahang = ref([]);
 
@@ -292,6 +409,10 @@ const schema = yup.object({
   dongia: yup.string().required('Bạn chưa nhập đơn giá'),
   dathanhtoan: yup.string().required('Bạn chưa nhập số tiền đã thanh toán'),
   conno: yup.string().required('Còn nợ'),
+  loaisanphamid: yup.string().required('Bạn chưa chọn loại sản phẩm'),
+  khoid: yup.string().required('Bạn chưa chọn kho'),
+  chatlieu: yup.string().required('Bạn chưa nhập chất liệu'),
+  mausac: yup.string().required('Bạn chưa nhập màu sắc'),
 });
 
 const { handleSubmit } = useForm({
@@ -338,6 +459,15 @@ hanphaithanhtoanField.value.value = formatTimeThanhtoan(time);
 const tenNhacungcapField = useField('tennhacungcap');
 // tenNhacungcapField.value.value =
 
+const loaisanphamidField = useField('loaisanphamid');
+const khoidField = useField('khoid');
+const chatlieuField = useField('chatlieu');
+const mausacField = useField('mausac');
+const baohanhField = useField('baohanh');
+baohanhField.value.value = '3 năm';
+const motaField = useField('mota');
+motaField.value.value = 'Không';
+
 const getNhacungcapById = (id) => {
   var lengthNhacungcap = Object.keys(nhacungcap.value).length;
 
@@ -357,19 +487,46 @@ const getAllNhacungcap = async () => {
   }
 };
 
+const getAllLoaisanpham = async () => {
+  const res = await serviceLoaisanpham.getAllLoaisanpham();
+  loaisanpham.value = res;
+  var lengthLoaisanpham = Object.keys(loaisanpham.value).length;
+  for (var i = 0; i < lengthLoaisanpham - 1; i++) {
+    loaisanphams.value.push(loaisanpham.value[i]);
+  }
+};
+
+const getAllKho = async () => {
+  const res = await serviceKho.getAllKho();
+  kho.value = res;
+  var lengthKho = Object.keys(kho.value).length;
+  for (var i = 0; i < lengthKho - 1; i++) {
+    khos.value.push(kho.value[i]);
+  }
+};
+
 const getAllPhieumuahang = async () => {
   const res = await servicePhieumuahang.getAllPhieumuahang();
   phieumuahang.value = res;
 
-  var lengthPhieumuahang = Object.keys(phieumuahang.value).length;
-  phieumuahangidField.value.value = phieumuahang.value[lengthPhieumuahang - 2].id;
-  for (var i = 0; i < lengthPhieumuahang; i++) {
-    if (getNhacungcapById(phieumuahang.value[i].nhacungcapid)) {
-      tenNhacungcapField.value.value = getNhacungcapById(
-        phieumuahang.value[i].nhacungcapid,
-      );
+  try {
+    var lengthPhieumuahang = Object.keys(phieumuahang.value).length;
+    phieumuahangidField.value.value = phieumuahang.value[lengthPhieumuahang - 2].id;
+    for (var i = 0; i < lengthPhieumuahang; i++) {
+      if (getNhacungcapById(phieumuahang.value[i].nhacungcapid)) {
+        tenNhacungcapField.value.value = getNhacungcapById(
+          phieumuahang.value[i].nhacungcapid,
+        );
+      }
     }
+  } catch (error) {
+    console.error('Error: ', error);
   }
+};
+
+const getAllProduct = async () => {
+  const res = await serviceProduct.getAllProduct();
+  product.value = res;
 };
 
 const tinhTongtien = async () => {
@@ -382,12 +539,13 @@ const tinhSono = async () => {
   return (connoField.value.value = sono);
 };
 
-// const getTenNccById
-
 onMounted(async () => {
   try {
     getAllNhacungcap();
     getAllPhieumuahang();
+    getAllLoaisanpham();
+    getAllProduct();
+    getAllKho();
   } catch (error) {
     console.log(error);
   }
@@ -411,6 +569,67 @@ watch(
   },
 );
 
+const addProduct = handleSubmit(async () => {
+  try {
+    const formData = new FormData();
+    formData.append('loaisanphamid', loaisanphamidField.value.value);
+    formData.append('tensanpham', tensanphamField.value.value);
+    formData.append('giaban', dongiaField.value.value);
+    formData.append('chatlieu', chatlieuField.value.value);
+    formData.append('macsac', mausacField.value.value);
+    formData.append('baohanh', baohanhField.value.value);
+    formData.append('mota', motaField.value.value);
+    formData.append('khoid', khoidField.value.value);
+    formData.append('soluongton', soluongField.value.value);
+
+    const response = await serviceProduct.addProduct(formData);
+    await addChitietphieumuahang();
+    if (response.success) {
+      loaisanphamidField.value.value = '';
+      tensanphamField.value.value = '';
+      dongiaField.value.value = '';
+      chatlieuField.value.value = '';
+      mausacField.value.value = '';
+      baohanhField.value.value = '';
+      motaField.value.value = '';
+      khoidField.value.value = '';
+      soluongField.value.value = '';
+      console.log('daa add san pham moi');
+    }
+  } catch (error) {}
+});
+
+const getProductByName = (name) => {
+  const res = serviceProduct.getProductByName(name);
+  infoProduct.value = res;
+};
+
+const editSoluongProduct = async () => {
+  try {
+    getProductByName(tensanphamField.value.value);
+    infoProduct.value.soluongton =
+      infoProduct.value.soluongton + soluongField.value.value;
+    const formData = new FormData();
+    formData.append('id', infoProduct.value.id);
+    formData.append('loaisanphamid', infoProduct.value.loaisanphamid);
+    formData.append('tensanpham', infoProduct.value.tensanpham);
+    formData.append('giaban', infoProduct.value.giaban);
+    formData.append('chatlieu', infoProduct.value.chatlieu);
+    formData.append('macsac', infoProduct.value.mausac);
+    formData.append('baohanh', infoProduct.value.baohanh);
+    formData.append('mota', infoProduct.value.mota);
+    formData.append('khoid', infoProduct.value.khoid);
+    formData.append('soluongton', infoProduct.value.soluongton);
+
+    const response = await serviceProduct.editProduct(infoProduct.value.id, formData);
+    await addChitietphieumuahang();
+
+    console.log(response);
+  } catch (error) {
+    console.error('Error: ', error);
+  }
+};
+
 const addCongnovoinhacungcap = handleSubmit(async () => {
   try {
     const formData = new FormData();
@@ -422,7 +641,6 @@ const addCongnovoinhacungcap = handleSubmit(async () => {
     formData.append('hanthanhtoan', hanphaithanhtoanField.value.value);
 
     const response = await serviceCongnovoinhacungcap.addCongnovoinhacungcap(formData);
-    console.log(response);
     if (response.success) {
       phieumuahangidField.value.value = '';
       tenNhacungcapField.value.value = '';
@@ -437,7 +655,6 @@ const addCongnovoinhacungcap = handleSubmit(async () => {
 });
 
 const addChitietphieumuahang = handleSubmit(async () => {
-  /////Lỗi add detail
   try {
     const formData = new FormData();
     formData.append('phieumuahangid', phieumuahangidField.value.value + 1);
@@ -449,13 +666,11 @@ const addChitietphieumuahang = handleSubmit(async () => {
     if (connoField.value.value > 0) {
       await addCongnovoinhacungcap();
     }
-    console.log(response);
     if (response.success) {
       phieumuahangidField.value.value = '';
       tensanphamField.value.value = '';
       soluongField.value.value = '';
       dongiaField.value.value = '';
-      // showSuccessNotification()
     }
   } catch (error) {
     console.error('Error', error);
@@ -471,10 +686,19 @@ const addPhieumuahang = handleSubmit(async () => {
     formData.append('tongtien', tongtienField.value.value);
 
     const response = await servicePhieumuahang.addPhieumuahang(formData);
-    await addChitietphieumuahang();
-    // if (connoField.value.value > 0) {
-    //   await addCongnovoinhacungcap();
-    // }
+
+    var lengProduct = Object.keys(product.value).length;
+    for (var i = 0; i < lengProduct - 1; i++) {
+      products.value.push(product.value[i]);
+      if (
+        products.value[i].tensanpham !== tensanphamField.value.value &&
+        products.value[i].loaisanphamid !== loaisanphamidField.value.value
+      ) {
+        await addProduct();
+      } else {
+        await editSoluongProduct();
+      }
+    }
 
     if (response.success) {
       nhacungcapidField.value.value = '';
@@ -498,7 +722,6 @@ const addPhieumuahang = handleSubmit(async () => {
 const addNewPhieumuahang = async () => {
   addPhieumuahang();
   await getAllPhieumuahang();
-  // await addChitietphieumuahang();
 };
 </script>
     
