@@ -375,6 +375,7 @@ import { serviceProduct } from '../../layouts/components/product/product';
 import { servicePhieumuahang } from '../../layouts/components/phieumuahang/phieumuahang';
 import { serviceChitietphieumuahang } from '../../layouts/components/chitietphieumuahang/chitietphieumuahang';
 import { serviceCongnovoinhacungcap } from '../../layouts/components/congnovoinhacungcap/congnovoinhacungcap';
+import { jwtDecode } from 'jwt-decode';
 
 const props = defineProps<{
   dialogAdd: boolean;
@@ -439,11 +440,8 @@ const formatTimeThanhtoan = (time) => {
   return year + '-' + formatMonth + '-' + formatDay;
 };
 
-const IdUser = localStorage.getItem('IDUSER');
-
 const nhacungcapidField = useField('nhacungcapid');
 const nhanvienidField = useField('nhanvienid');
-nhanvienidField.value.value = IdUser;
 const ngaymuahangField = useField('ngaymuahang');
 const time = new Date();
 ngaymuahangField.value.value = formatTime(time);
@@ -467,6 +465,21 @@ const baohanhField = useField('baohanh');
 baohanhField.value.value = '3 năm';
 const motaField = useField('mota');
 motaField.value.value = 'Không';
+
+const token = localStorage.getItem('ACCESS_TOKEN');
+
+const decodeToken = async (token) => {
+  try {
+    const decode = jwtDecode(token);
+    if (decode) {
+      nhanvienidField.value.value = decode.sub;
+
+      console.log(decode.sub);
+    }
+  } catch (error) {
+    console.error('Failed to decode token: ', error);
+  }
+};
 
 const getNhacungcapById = (id) => {
   var lengthNhacungcap = Object.keys(nhacungcap.value).length;
@@ -546,6 +559,7 @@ onMounted(async () => {
     getAllLoaisanpham();
     getAllProduct();
     getAllKho();
+    decodeToken(token);
   } catch (error) {
     console.log(error);
   }

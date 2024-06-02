@@ -410,20 +410,7 @@ const formatTimeThanhtoan = (time) => {
   return year + '-' + formatMonth + '-' + formatDay;
 };
 
-const token = localStorage.getItem('ACCESS_TOKEN');
-
-const decodeToken = async (token) => {
-  try {
-    const decode = jwtDecode(token);
-    if (decode) {
-      return decode.sub;
-    }
-  } catch (error) {
-    console.error('Failed to decode token: ', error);
-  }
-};
-
-const IdUser = localStorage.getItem('IDUSER');
+// const IdUser = localStorage.getItem('IDUSER');
 
 const ngaytaodonField = useField('ngaytaodon');
 const time = new Date();
@@ -431,7 +418,7 @@ ngaytaodonField.value.value = formatTime(time);
 const diachigiaohangField = useField('diachigiaohang');
 const khachhangidField = useField('khachhangid');
 const nhanvienidField = useField('nhanvienid');
-nhanvienidField.value.value = IdUser;
+// nhanvienidField.value.value = IdUser;
 // nhanvienidField.value.value = decodeToken(token);
 const tinhtrangidField = useField('tinhtrangid');
 tinhtrangidField.value.value = 1;
@@ -461,6 +448,21 @@ hanphaithanhtoanField.value.value = formatTimeThanhtoan(time);
 // tiendathanhtoanField.value.value = dathanhtoanField.value.value;
 
 // thanhtienField.value.value = dongiaField * soluongField;
+
+const token = localStorage.getItem('ACCESS_TOKEN');
+
+const decodeToken = async (token) => {
+  try {
+    const decode = jwtDecode(token);
+    if (decode) {
+      nhanvienidField.value.value = decode.sub;
+
+      console.log(decode.sub);
+    }
+  } catch (error) {
+    console.error('Failed to decode token: ', error);
+  }
+};
 
 const getKhachhangByPhone = async () => {
   const res = await serviceKhachhang.getKhachhangByPhone(dienthoaikhField.value.value);
@@ -528,7 +530,7 @@ onMounted(async () => {
   try {
     getAllDonhang();
     getAllSanpham();
-    console.log(decodeToken(token));
+    decodeToken(token);
   } catch (error) {
     console.log(error);
   }
