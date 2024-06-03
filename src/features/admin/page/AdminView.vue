@@ -223,6 +223,7 @@ import PhieumuahangLayout from '@/layouts/PhieumuahangLayout.vue';
 import CongnovoinhacungcapLayout from '@/layouts/CongnovoinhacungcapLayout.vue';
 import router from '@/plugins/vue-router';
 import Page403 from './Page403.vue';
+import { jwtDecode } from 'jwt-decode';
 
 const drawer = ref(null);
 
@@ -236,9 +237,32 @@ const Profile = ref(false);
 const items = ref([{ title: 'Xem profile' }, { title: 'Đăng xuất' }]);
 
 const image = 'data:image/jpeg;base64, ';
+const userRole = ref('');
 
 const ROLE = localStorage.getItem('ROLE');
 const AvatarUser = localStorage.getItem('AVATAR');
+const token = localStorage.getItem('ACCESS_TOKEN');
+
+const decodeToken = async (token) => {
+  try {
+    const decode = jwtDecode(token);
+    if (decode) {
+      userRole.value = decode.chucvu;
+
+      console.log(decode.sub);
+    }
+  } catch (error) {
+    console.error('Failed to decode token: ', error);
+  }
+};
+
+// onMounted(async () => {
+//   try {
+//     decodeToken(token);
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 
 const returnTitle = (op) => {
   if (op === 1) {

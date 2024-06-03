@@ -410,15 +410,12 @@ const formatTimeThanhtoan = (time) => {
   return year + '-' + formatMonth + '-' + formatDay;
 };
 
-// const IdUser = localStorage.getItem('IDUSER');
-
 const ngaytaodonField = useField('ngaytaodon');
 const time = new Date();
 ngaytaodonField.value.value = formatTime(time);
 const diachigiaohangField = useField('diachigiaohang');
 const khachhangidField = useField('khachhangid');
 const nhanvienidField = useField('nhanvienid');
-// nhanvienidField.value.value = IdUser;
 // nhanvienidField.value.value = decodeToken(token);
 const tinhtrangidField = useField('tinhtrangid');
 tinhtrangidField.value.value = 1;

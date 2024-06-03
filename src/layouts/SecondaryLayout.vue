@@ -10,6 +10,7 @@ import AddAvatarUser from '../components/user/AddAvatarUser.vue';
 import { showSuccessNotification } from '@/common/helpers';
 import avatar_define from '@/assets/images/avatar_mac_dinh.jpg';
 import Page403 from '@/features/admin/page/Page403.vue';
+import { jwtDecode } from 'jwt-decode';
 
 const { fetchUser, query } = useUser();
 
@@ -30,16 +31,32 @@ const search = ref('');
 
 const avatar = ref([]);
 const image = 'data:image/jpeg;base64, ';
+const userRole = ref('');
 // const lengthAvatar = ref(0);
-const ROLE = localStorage.getItem('ROLE');
+// const ROLE = localStorage.getItem('ROLE');
 
 const lengthPage = ref(1);
 const selectedValue = ref(DEFAULT_LIMIT_FOR_PAGINATION);
+const token = localStorage.getItem('ACCESS_TOKEN');
+
+const decodeToken = async (token) => {
+  try {
+    const decode = jwtDecode(token);
+    if (decode) {
+      userRole.value = decode.chucvu;
+
+      console.log(decode.sub);
+    }
+  } catch (error) {
+    console.error('Failed to decode token: ', error);
+  }
+};
 
 onMounted(async () => {
   try {
     getAllUser();
     getAllAvatar();
+    decodeToken(token);
   } catch (error) {
     console.log(error);
   }
@@ -122,7 +139,7 @@ const deleteUser = async () => {
 
 <template>
   <component :is="Component" />
-  <div class="ml-5 mr-4" v-if="ROLE === 'admin'">
+  <div class="ml-5 mr-4" v-if="userRole === 'admin'">
     <v-row>
       <v-col cols="4" class="mt-4">
         <v-text-field
